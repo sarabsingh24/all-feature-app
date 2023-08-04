@@ -39,7 +39,7 @@ const ProductList = ({ users }: ProductListProps) => {
   return (
     <div>
       <p>
-        <InputField value={value} handelchange={handelchange} />
+        <InputField type="text" value={value} handelchange={handelchange} />
       </p>
 
       {userList.length > 0 &&

@@ -7,7 +7,7 @@ type navbarProps = {
 
 function Navbar({ isLogined }: navbarProps) {
   return (
-    <div>
+    <div style={{display:'flex', justifyContent:'space-between'}}>
       <Link to="/">Home</Link>
       <Link to="/login">Login</Link>
       <Link to="/register">Register</Link>

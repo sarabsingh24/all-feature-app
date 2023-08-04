@@ -1,5 +1,8 @@
 
 import axios from 'axios'
+
+const API_URL = '/api/users'
+
 // get userList
 export const getUserList = async()=>{
     const response = await axios.get(

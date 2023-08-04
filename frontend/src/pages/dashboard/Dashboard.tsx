@@ -15,7 +15,7 @@ setValue(value);
     <h1>
       Dashboard
       <SecondFun btnHandeler={(event, id) => console.log('ggggg', event, id)} />
-      <InputField value={value} handelchange={handelchange} />
+      <InputField type='text' value={value} handelchange={handelchange} />
     
     </h1>
   );

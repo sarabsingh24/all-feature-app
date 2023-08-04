@@ -19,7 +19,8 @@ import {fileURLToPath} from 'url';
 import connectDB from './config/db.js';
 
 import userRoutes from './routes/userRoutes.js';
-import { register } from './controllers/auth.js';
+import authRoutes from './routes/authRoutes.js';
+// import { register } from './controllers/authController.js';
 
 /* ==== configration ========== */
 
@@ -55,8 +56,8 @@ const upload = multer({ storage });
  
 /* ROUTES */
 
-app.post('/api/register', upload.single("picture"), register);
-
+// app.post('/api/register', upload.single("picture"), register);
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
   
 app.listen(port, () =>

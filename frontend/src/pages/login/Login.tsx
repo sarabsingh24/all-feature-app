@@ -37,7 +37,6 @@ const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(isSuccess);
       navigate('/');
     }
   }, [isSuccess]);

@@ -1,18 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
+import {  reset } from '@reducers/auth/authReducer';
+
 
 type navbarProps = {
   isLogined: boolean;
 };
 
 function Navbar({ isLogined }: navbarProps) {
+const { isLogedin } = useAppSelector((state) => state.auth);
+const dispatch = useAppDispatch();
+const navigate = useNavigate();
+
+const logoutHandeler = () => {
+  dispatch(reset());
+  navigate('/login');
+};
+
   return (
-    <div style={{display:'flex', justifyContent:'space-between'}}>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Link to="/">Home</Link>
       <Link to="/login">Login</Link>
       <Link to="/register">Register</Link>
       <Link to="/products">Products</Link>
-      {isLogined && <Link to="/test">Tests</Link>}
+      {isLogedin && <button onClick={logoutHandeler}>Logout</button>}
+      {/* {isLogined && <Link to="/test">Tests</Link>} */}
     </div>
   );
 }

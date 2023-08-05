@@ -1,37 +1,42 @@
+import asyncHandler from 'express-async-handler';
 
 
-
-
-export const getUsers = async (req, res) => {
-
+//@desc     Fetch Users
+//@route    GET /api/users/
+export const getUsers = asyncHandler(async (req, res) => {
   try {
     res.status(201).json({ message: 'get user.......' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
+});
 
-
-export const setUser = async (req, res) => {
+//@desc     Add Users
+//@route    POST /api/users/
+export const setUser = asyncHandler(async (req, res) => {
   try {
     res.status(201).json({ message: 'set user.......' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
+});
 
-export const updateUser = async (req, res) => {
+//@desc     Update single Users
+//@route    PATCH /api/users/:id
+export const updateUser = asyncHandler(async (req, res) => {
   try {
     res.status(201).json({ message: 'update user.......' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
+});
 
-export const deleteUser = async (req, res) => {
+//@desc     Remove single Users
+//@route    DELETE /api/users/:id
+export const deleteUser = asyncHandler(async (req, res) => {
   try {
     res.status(201).json({ message: 'delete user.......' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
+});

@@ -1,14 +1,20 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import asyncHandler from 'express-async-handler'
 
 /*  REGISTER USER  */
 
-export const register = async (req, resp) => {
-  console.log('dddd')
+export const register = asyncHandler(async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-
+    if (!email) {
+      res.status(400);
+      throw new Error('please add email 123');
+    } else if (!password) {
+      res.status(400);
+      throw new Error('please add password');
+    }
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
@@ -20,13 +26,12 @@ export const register = async (req, resp) => {
     });
 
     const savedUser = await newUser.save();
-  
-    resp.status(201).json(savedUser);
-  } catch (err) {
 
+    res.status(201).json(savedUser);
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+});
 
 export const register___OLD = async (req, res) => {
   try {
@@ -66,12 +71,22 @@ export const register___OLD = async (req, res) => {
 };
 
 /* LOGIN USER */
-export const login = async (req, res) => {
+export const login = asyncHandler(async (req, res) => {
   try {
-     res.status(200).json({ message: 'logined' });
+    const { email, password } = req.body;
+
+    if (!email) {
+      res.status(400);
+      throw new Error('please add email');
+    } else if (!password) {
+      res.status(400);
+      throw new Error('please add password');
+    }
+
+    res.status(200).json({ message: 'set goal' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
+});
 
 /* TEst USERS */

@@ -6,6 +6,7 @@ type IState = {
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
+  isLogedin: boolean;
   message: any;
 };
 
@@ -14,6 +15,7 @@ const initialState: IState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  isLogedin: false,
   message: '',
 };
 
@@ -59,6 +61,7 @@ const authSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
+      state.isLogedin = false;
       state.message = '';
     },
   },
@@ -87,6 +90,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isLogedin = true;
         state.isSuccess = true;
         state.user = action.payload;
       })

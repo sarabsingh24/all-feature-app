@@ -25,18 +25,18 @@ const UserSchema = new mongoose.Schema({
     required: true,
     min: 8,
   },
-  // picturePath: {
-  //   type: String,
-  //   default: '',
-  // },
-  // friends: {
-  //   type: Array,
-  //   default: [],
-  // },
-  // location: String,
-  // occupation: String,
-  // viewedProfile: Number,
-  // impressions: Number,
+  picturePath: {
+    type: String,
+    default: '',
+  },
+  friends: {
+    type: Array,
+    default: [],
+  },
+  location: String,
+  occupation: String,
+  viewedProfile: Number,
+  impressions: Number,
 },{timestamps:true});
 
 const User = mongoose.model('User',UserSchema)

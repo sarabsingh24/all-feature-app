@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 
 import InputField from '@components/input-field/InputField';
 import InputButton from '@src/components/button/Button';
@@ -61,6 +61,10 @@ const Login = () => {
         />
         <InputButton btnType="submit" btnName="Submit" />
       </form>
+
+      <small>
+        <Link to='/register'>Signup here</Link>
+      </small>
     </React.Fragment>
   );
 };

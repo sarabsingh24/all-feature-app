@@ -3,10 +3,9 @@ import InputField from '@components/input-field/InputField';
 
 type ProductListProps = {
   users: {
-    id: number;
-    name: string;
-    username: string;
-    email: string;
+    _id: string;
+    title: string;
+    text: string;
   }[];
 };
 
@@ -19,13 +18,13 @@ const ProductList = ({ users }: ProductListProps) => {
     setValue(value);
 
     let changeList = users.filter((item) => {
-      let name = item.name.toLowerCase();
-      let username = item.username.toLowerCase();
-      let email = item.email.toLowerCase();
+      let name = item.title.toLowerCase();
+      let username = item.text.toLowerCase();
+      
       return (
         name.startsWith(value) ||
-        username.startsWith(value) ||
-        email.startsWith(value)
+        username.startsWith(value) 
+       
       );
     });
 
@@ -45,9 +44,9 @@ const ProductList = ({ users }: ProductListProps) => {
       {userList.length > 0 &&
         userList.map((user) => {
           return (
-            <div key={user.id}>
-              <span>{user.name}</span> ;=
-              <span>{user.username}</span>; =<span>{user.email}</span>
+            <div key={user._id}>
+              <span>{user.title}</span> ;=
+              <span>{user.text}</span>; =
             </div>
           );
         })}

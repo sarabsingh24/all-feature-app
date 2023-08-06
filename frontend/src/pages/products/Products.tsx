@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
-import { getUsers } from '@src/reducers/users/usersReducer';
+import { usersList } from '@src/reducers/users/usersReducer';
 
 import ProductList from './ProductList';
 
@@ -11,7 +11,7 @@ function Products() {
   const dispatch = useAppDispatch();
 
   const getuserList = () => {
-    dispatch(getUsers());
+    dispatch(usersList());
   };
 
   if (isLoading) {

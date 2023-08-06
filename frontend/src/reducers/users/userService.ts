@@ -1,16 +1,14 @@
 
 import axios from 'axios'
 
-const API_URL = '/api/users'
+const API_URL = 'http://localhost:5002/api/articles';
 
 // get userList
-export const getUserList = async()=>{
-    const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/users'
-    );
+export const getUser = async()=>{
+    const response = await axios.get(API_URL + '/');
     return response.data
 }
 
 
- const userservice ={getUserList}
- export default userservice;
+ const userService ={getUser}
+ export default userService;

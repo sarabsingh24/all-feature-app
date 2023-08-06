@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import InputField from '@components/input-field/InputField';
 import InputButton from '@src/components/button/Button';
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
-import { registerUser, reset } from '@reducers/auth/authReducer';
+import { registerUser, resetUser } from '@reducers/auth/authReducer';
 
 type formProps = {
   firstName: string;
@@ -39,7 +39,7 @@ const Register = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(reset());
+      dispatch(resetUser());
       navigate('/login');
     }
   }, [isSuccess]);

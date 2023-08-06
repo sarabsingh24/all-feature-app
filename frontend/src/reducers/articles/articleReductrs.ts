@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import userService from './userService';
+import articleService from './articleService';
 
 type IState = {
-  users: [];
+  articles: [];
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
@@ -10,16 +10,16 @@ type IState = {
 };
 
 const initialState: IState = {
-  users: [],
+  articles: [],
   isLoading: false,
   isSuccess: false,
   isError: false,
   message: '',
 };
 
-export const usersList = createAsyncThunk('users/get', async (_, thunkAPI) => {
+export const article = createAsyncThunk('articles/get', async (_, thunkAPI) => {
   try {
-    return await userService.getUser();
+    return await articleService.getArticles();
   } catch (error: any) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -30,14 +30,12 @@ export const usersList = createAsyncThunk('users/get', async (_, thunkAPI) => {
   }
 });
 
-
-
-
 const usersSlice = createSlice({
-  name: 'user',
+  name: 'article',
   initialState,
   reducers: {
     resetArticle: (state) => {
+      state.articles = [];
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
@@ -45,18 +43,18 @@ const usersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(usersList.pending, (state) => {
+    builder.addCase(article.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(usersList.fulfilled, (state, action) => {
+    builder.addCase(article.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.users = action.payload;
+      state.articles = action.payload;
       state.isSuccess = true;
       state.isError = false;
     });
-    builder.addCase(usersList.rejected, (state, action) => {
+    builder.addCase(article.rejected, (state, action) => {
       state.isLoading = false;
-      state.users = [];
+      state.articles = [];
       state.isError = true;
       state.isSuccess = false;
       state.message = action.payload;
@@ -65,5 +63,5 @@ const usersSlice = createSlice({
 });
 
 const { actions, reducer } = usersSlice;
-
+export const { resetArticle } = actions;
 export default reducer;

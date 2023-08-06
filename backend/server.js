@@ -18,10 +18,10 @@ import chalk from 'chalk';
 import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 
-
 //Routes
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import articleRoutes from './routes/articleRoutes.js';
 import { errorHandeler } from './middleware/errorMiddleware.js';
 
 // import { register } from './controllers/authController.js';
@@ -62,8 +62,10 @@ const upload = multer({ storage });
 
 // app.post('/api/register', upload.single("picture"), register);
 app.use('/api/auth', authRoutes);
-app.use(errorHandeler);
 app.use('/api/users', userRoutes);
+app.use('/api/articles', articleRoutes);
+
+app.use(errorHandeler);
 
 app.listen(port, () =>
   console.log(chalk.blue`server started at *********** ${port} ***********`)

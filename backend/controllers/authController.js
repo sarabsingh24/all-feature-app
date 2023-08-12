@@ -17,13 +17,17 @@ export const register = asyncHandler(async (req, res) => {
     occupation,
   } = req.body;
 
-  if (!email) {
+  if (!firstName || !lastName || !email || !password) {
     res.status(400);
-    throw new Error('please add email 123');
-  } else if (!password) {
-    res.status(400);
-    throw new Error('please add password');
+    throw new Error('please fill the');
   }
+
+  const createUser = await User.findOne({ email });
+  if (createUser) {
+    res.status(400);
+    throw new Error('user already exist');
+  }
+
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
 
@@ -40,22 +44,37 @@ export const register = asyncHandler(async (req, res) => {
     impressions: Math.floor(Math.random() * 10000),
   });
 
-  res.status(201).json(savedUser);
+  if (savedUser) {
+    res.status(201).json(savedUser);
+  } else {
+    res.status(400);
+    throw new Error('invalid user data');
+  }
 });
 
 /* LOGIN USER */
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email) {
+  if (!email || !password) {
     res.status(400);
-    throw new Error('please add email');
-  } else if (!password) {
-    res.status(400);
-    throw new Error('please add password');
+    throw new Error('please fill all field');
   }
 
-const loginUser = await User.findOne(email);
+  const user = await User.findOne({ email });
+
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.status(200).json({
+      _id: user.id,
+      firstName:user.firstName,
+      lastName:user.lastName,
+      email: user.email,
+     
+    });
+  } else {
+    res.status(400);
+    throw new Error('invalid credentials');
+  }
 
   res.status(200).json(loginUser);
 });

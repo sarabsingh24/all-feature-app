@@ -32,8 +32,15 @@
   /* ------- multicolor ------- */
 
   --color-white-1: #ffffff;
-  --color-white-2:#fafafa; /*grey-50 */
+  --color-white-2:#fafafa;
+  --color-white-3:#f6f7f9; /*grey-50 */
+  --color-white-4:#eaeaea
+ 
 
+
+  /*-------Bg color -----*/
+
+  --bg-color-main:#2e40ac;
   /* ---------font bold ------- */
   --thin-font: 100;
   --ext-light-font: 200;
@@ -59,8 +66,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--color-white-2);
-  margin:18px;
+  background-color: var(--color-white-4);
+  
 }
 
 code {

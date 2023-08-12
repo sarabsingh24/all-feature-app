@@ -57,7 +57,7 @@ export const deleteArticle = asyncHandler(async (req, res) => {
     throw new Error('Article not found');
   }
 
-  await Article.remove();
+   await article.deleteOne();
 
   res.status(200).json({id:id});
 });

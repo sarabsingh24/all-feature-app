@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import InputField from '@components/input-field/InputField';
 import InputButton from '@src/components/button/Button';
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
 import { registerUser, resetUser } from '@reducers/auth/authReducer';
+
+import {WrapperStyle} from './Register-style'
 
 type formProps = {
   firstName: string;
@@ -45,40 +47,46 @@ const Register = () => {
   }, [isSuccess]);
 
   return (
-    <React.Fragment>
-      <h1>Register User</h1>
-      <form onSubmit={submitFormHandeler}>
-        <InputField
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          value={form.firstName || ''}
-          handelchange={inputChangeHandeler}
-        />
-        <InputField
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          value={form.lastName || ''}
-          handelchange={inputChangeHandeler}
-        />
-        <InputField
-          type="text"
-          name="email"
-          value={form.email || ''}
-          placeholder="Your Email"
-          handelchange={inputChangeHandeler}
-        />
-        <InputField
-          type="password"
-          name="password"
-          value={form.password || ''}
-          placeholder="Your Password"
-          handelchange={inputChangeHandeler}
-        />
-        <InputButton btnType="submit" btnName="Submit" />
-      </form>
-    </React.Fragment>
+    <WrapperStyle>
+      <div className="box-width">
+        <h3>Register User</h3>
+        <form onSubmit={submitFormHandeler} className="center-box">
+          <InputField
+            type="text"
+            name="firstName"
+            placeholder="First Name"
+            value={form.firstName || ''}
+            handelchange={inputChangeHandeler}
+          />
+          <InputField
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value={form.lastName || ''}
+            handelchange={inputChangeHandeler}
+          />
+          <InputField
+            type="text"
+            name="email"
+            value={form.email || ''}
+            placeholder="Your Email"
+            handelchange={inputChangeHandeler}
+          />
+          <InputField
+            type="password"
+            name="password"
+            value={form.password || ''}
+            placeholder="Your Password"
+            handelchange={inputChangeHandeler}
+          />
+          <InputButton btnType="submit" btnName="Submit" />
+        </form>
+        <small>
+          Already have an account?
+          <Link to="/login"> Log In</Link>
+        </small>
+      </div>
+    </WrapperStyle>
   );
 };
 

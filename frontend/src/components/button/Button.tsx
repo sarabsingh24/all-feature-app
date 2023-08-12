@@ -4,10 +4,15 @@ import { ButtonStyle } from './Button-style';
 type InputButtonProps = {
   btnType: any;
   btnName: string;
+  btnFunction?:()=> void;
 };
 
-const InputButton = ({ btnType, btnName }: InputButtonProps) => {
-  return <ButtonStyle type={btnType}>{btnName}</ButtonStyle>;
+const InputButton = ({ btnType, btnName, btnFunction }: InputButtonProps) => {
+  return (
+    <ButtonStyle type={btnType} onClick={btnFunction}>
+      {btnName}
+    </ButtonStyle>
+  );
 };
 
 export default InputButton;

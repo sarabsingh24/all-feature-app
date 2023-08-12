@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from './authService';
 
 type IState = {
-  user: null | {};
+  user: {};
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
@@ -11,7 +11,7 @@ type IState = {
 };
 
 const initialState: IState = {
-  user: null,
+  user: {},
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -58,6 +58,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     resetUser: (state) => {
+      state.user= {};
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
@@ -80,7 +81,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.user = null;
+        state.user = {};
       });
 
     // LOGIN USER
@@ -98,7 +99,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.user = null;
+        state.user = {};
       });
   },
 });

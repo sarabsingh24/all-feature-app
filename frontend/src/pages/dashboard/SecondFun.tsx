@@ -9,7 +9,7 @@ const SecondFun = ({ btnHandeler }: SecondFunProps) => {
   return (
     <div>
       SecondFun
-      <button onClick={(event) => btnHandeler(event, 22)}>click</button>
+      <button onClick={(event) => btnHandeler(event, 22)}>click</button> 
     </div>
   );
 };

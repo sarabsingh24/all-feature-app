@@ -6,6 +6,7 @@ import {
   updateArticle,
   deleteArticle,
   resetArticle,
+  // responseArticles,
 } from '@src/reducers/articles/articleReductrs';
 import { toast } from 'react-toastify';
 
@@ -20,10 +21,11 @@ import PostsList from './PostsList';
 const formFields = {
   title: '',
   text: '',
+  likes: 0,
+  dislikes: 0,
 };
 
 function Posts() {
-  const [listArr, setListArr] = useState([]);
   const [textArea, setTextArea] = useState(formFields);
   const [editStatus, setEditStatus] = useState(false);
   const [id, setID] = useState('');
@@ -43,6 +45,11 @@ function Posts() {
     setTextArea({ ...textArea, [name]: value });
   };
 
+  const testFun = () => {
+    
+  
+  };
+
   const submitPostHandeler = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -52,50 +59,87 @@ function Posts() {
     }
 
     if (editStatus) {
-      const filterData: any = articles.map((item: { _id: string }) => {
-        if (item._id === id) {
-          return { ...textArea };
-        }
-        return item;
-      });
-      // setListArr(filterData);
+      // const filterData: any = articles.map((item: { _id: string }) => {
+      //   if (item._id === id) {
+      //     return { ...textArea };
+      //   }
+      //   return item;
+      // });
 
-      const data: { id: string; obj: {} ,arr:[]} = {
-        id: id,
-        obj: { ...textArea },
-        arr: filterData
-      };
+        const data: { id: string; obj: {} } = {
+          id: id,
+          obj: { ...textArea },
+        };
 
-      dispatch(updateArticle(data));
+        dispatch(updateArticle(data));
       setEditStatus(false);
     } else {
       dispatch(articlePost(textArea));
     }
-    setTextArea({ title: '', text: '' });
+    setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
     dispatch(article());
+      dispatch(resetArticle());
+    ;
   };
 
   const updateHandeler = (
     e: React.SyntheticEvent,
-    article: { title: string; text: string; _id: string }
+    article: {
+      title: string;
+      text: string;
+      _id: string;
+      likes: number;
+      dislikes: number;
+    }
   ) => {
-    setTextArea({ title: article.title, text: article.text });
+    setTextArea({
+      title: article.title,
+      text: article.text,
+      likes: article.likes,
+      dislikes: article.dislikes,
+    });
     setID(article._id);
     setEditStatus(true);
+    dispatch(resetArticle());
   };
 
   const deleteHandeler = (e: React.SyntheticEvent, id: string) => {
-    // const filterData: any = articles.filter(
-    //   (item: { _id: string }) => item._id !== id
-    // );
-    // setListArr(filterData);
-
     dispatch(deleteArticle(id));
     dispatch(resetArticle());
   };
 
+  const responseHandeler = (
+    e: React.SyntheticEvent,
+    article: {
+      title: string;
+      text: string;
+      _id: string;
+      likes: number;
+      dislikes: number;
+    }
+  ) => {
+    const attName = e.currentTarget.getAttribute('data-name');
+
+    const data: { id: string; obj: {} } = {
+      id: id,
+      obj: {},
+    };
+    if (attName === 'likes') {
+      data.obj = { ...article, likes: article.likes + 1 };
+      setID(article._id);
+    } else {
+      data.obj = { ...article, dislikes: article.dislikes + 1 };
+      setID(article._id);
+    }
+
+    
+
+    dispatch(updateArticle(data));
+    dispatch(resetArticle());
+  };
+
   const resetFormHandeler = () => {
-    setTextArea({ title: '', text: '' });
+    setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
   };
 
   useEffect(() => {
@@ -103,7 +147,6 @@ function Posts() {
   }, [articleObj]);
 
   useEffect(() => {
-    // setListArr(articles);
     dispatch(resetArticle());
   }, [articles]);
 
@@ -113,9 +156,15 @@ function Posts() {
     }
   }, [isSuccess]);
 
+
+
+
+
+
   if (isLoading) {
     return <small>Loading......</small>;
   }
+
   return (
     <div>
       <FormStyled onSubmit={submitPostHandeler}>
@@ -153,6 +202,7 @@ function Posts() {
             <PostsList
               article={post}
               key={_id}
+              responseHandeler={responseHandeler}
               deleteHandeler={deleteHandeler}
               updateHandeler={updateHandeler}
             />

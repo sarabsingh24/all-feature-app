@@ -20,7 +20,7 @@ export const FlexSB = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 12px;
-  && span {
+  && .art-info {
     font-size: 12px;
     padding: 12px 0;
     color: #60656f;

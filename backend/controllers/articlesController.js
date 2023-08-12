@@ -11,7 +11,7 @@ export const getArticles = asyncHandler(async (req, res) => {
 //@desc     Add Article
 //@route    POST /api/articles/
 export const setArticle = asyncHandler(async (req, res) => {
-  const { title, text } = req.body;
+  const { title, text, likes, dislikes } = req.body;
   if (!title) {
     res.status(400);
     throw new Error('Please add a title value controller');
@@ -24,6 +24,8 @@ export const setArticle = asyncHandler(async (req, res) => {
   const article = await Article.create({
     title: title,
     text: text,
+    likes: likes,
+    dislikes: dislikes,
   });
 
   res.status(201).json(article);

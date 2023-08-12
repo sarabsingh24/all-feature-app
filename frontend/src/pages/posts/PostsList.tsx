@@ -6,34 +6,71 @@ type ProductListProps = {
     _id: string;
     title: string;
     text: string;
+    likes: number;
+    dislikes: number;
   };
+  responseHandeler:( event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    article: {
+      title: string;
+      text: string;
+      _id: string;
+      likes: number;
+      dislikes: number;
+    }
+  ) => void;
   updateHandeler: (
-    event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    article: { title: string; text: string; _id: string }
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    article: {
+      title: string;
+      text: string;
+      _id: string;
+      likes: number;
+      dislikes: number;
+    }
   ) => void;
   deleteHandeler: (
-    event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: string
   ) => void;
 };
 
 const PostsList = ({
   article,
-  updateHandeler,deleteHandeler,
+  updateHandeler,
+  deleteHandeler,
+  responseHandeler,
 }: ProductListProps) => {
   return (
     <WrapperStyle>
       <TitleStyle>{article.title}</TitleStyle>
       <ParaStyle>{article.text}</ParaStyle>
       <FlexSB>
-        <span>likes:{99}</span>
-        <span>unlike:{99}</span>
-        <span onClick={(event) => updateHandeler(event,article)}>
+        <div
+          className="art-info"
+          data-name="likes"
+          onClick={(event) => responseHandeler(event, article)}
+        >
+          likes:{article.likes}
+        </div>
+        <div
+          className="art-info"
+          data-name="dislike"
+          onClick={(event) => responseHandeler(event, article)}
+        >
+          dislikes:{article.dislikes}
+        </div>
+        <div
+          className="art-info"
+          onClick={(event) => updateHandeler(event, article)}
+        >
           Edit
-        </span>
-        <span onClick={(event) => deleteHandeler(event, article._id)}>
+        </div>
+        <div
+          className="art-info"
+          onClick={(event) => deleteHandeler(event, article._id)}
+        >
           Delete
-        </span>
+        </div>
       </FlexSB>
     </WrapperStyle>
   );

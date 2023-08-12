@@ -10,6 +10,12 @@ const ArticleSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please add text value scheema'],
     },
+    likes: {
+      type: Number,
+    },
+    dislikes: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

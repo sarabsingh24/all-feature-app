@@ -15,9 +15,11 @@ export const setArticles = async (data:{}) => {
 };
 // UPDATE articles
 export const updateArticles = async (data:  {id:string, obj:{}}) => {
+  console.log(data)
   const response = await axios.put(API_URL + `/${data.id}`, data.obj);
   return response.data;
 };
+
 
 // DELETE articles
 export const deleteArticles = async (data:string) => {
@@ -25,5 +27,11 @@ export const deleteArticles = async (data:string) => {
   return response.data;
 };
 
-const articleService = { getArticles, setArticles,updateArticles, deleteArticles };
+const articleService = {
+  getArticles,
+  setArticles,
+  updateArticles,
+  deleteArticles,
+ 
+};
 export default articleService;

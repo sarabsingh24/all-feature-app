@@ -8,8 +8,10 @@ type ProductListProps = {
     text: string;
     likes: number;
     dislikes: number;
+    createdAt:string;
   };
-  responseHandeler:( event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  responseHandeler: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     article: {
       title: string;
       text: string;
@@ -42,7 +44,14 @@ const PostsList = ({
 }: ProductListProps) => {
   return (
     <WrapperStyle>
-      <TitleStyle>{article.title}</TitleStyle>
+      <header>
+        <img src="" alt="image title" />
+      </header>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} >
+        <TitleStyle>{article.title}</TitleStyle>
+        <small>{article.createdAt}</small>
+      </div>
+
       <ParaStyle>{article.text}</ParaStyle>
       <FlexSB>
         <div

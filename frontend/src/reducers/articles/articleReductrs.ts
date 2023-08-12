@@ -139,7 +139,6 @@ const usersSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateArticle.fulfilled, (state, action) => {
-        
         state.isLoading = false;
         state.articleObj = action.payload;
         state.isSuccess = true;

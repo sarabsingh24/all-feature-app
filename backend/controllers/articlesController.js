@@ -3,7 +3,7 @@ import Article from '../models/Article.js';
 //@desc     Fetch Articles
 //@route    GET /api/articles/
 export const getArticles = asyncHandler(async (req, res) => {
-  const article = await Article.find();
+  const article = await Article.find().sort('-createdAt');
 
   res.status(201).json(article);
 });
@@ -11,6 +11,7 @@ export const getArticles = asyncHandler(async (req, res) => {
 //@desc     Add Article
 //@route    POST /api/articles/
 export const setArticle = asyncHandler(async (req, res) => {
+  
   const { title, text, likes, dislikes } = req.body;
   if (!title) {
     res.status(400);
@@ -36,10 +37,13 @@ export const setArticle = asyncHandler(async (req, res) => {
 export const updateArticle = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const article = await Article.findById(id);
+  
   if (!article) {
     res.status(400);
     throw new Error('Article not found');
   }
+
+  console.log(req.body);
 
   const updateArticle = await Article.findByIdAndUpdate(id, req.body, {
     new: true,

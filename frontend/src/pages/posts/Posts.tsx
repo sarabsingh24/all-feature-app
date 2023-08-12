@@ -45,10 +45,7 @@ function Posts() {
     setTextArea({ ...textArea, [name]: value });
   };
 
-  const testFun = () => {
-    
-  
-  };
+ 
 
   const submitPostHandeler = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -59,27 +56,49 @@ function Posts() {
     }
 
     if (editStatus) {
-      // const filterData: any = articles.map((item: { _id: string }) => {
-      //   if (item._id === id) {
-      //     return { ...textArea };
-      //   }
-      //   return item;
-      // });
+   
+      const data: { id: string; obj: {} } = {
+        id: id,
+        obj: { ...textArea },
+      };
 
-        const data: { id: string; obj: {} } = {
-          id: id,
-          obj: { ...textArea },
-        };
-
-        dispatch(updateArticle(data));
+      dispatch(updateArticle(data));
       setEditStatus(false);
     } else {
+    
       dispatch(articlePost(textArea));
     }
     setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
     dispatch(article());
-      dispatch(resetArticle());
-    ;
+    dispatch(resetArticle());
+  };
+
+  const responseHandeler = (
+    e: React.SyntheticEvent,
+    article: {
+      title: string;
+      text: string;
+      _id: string;
+      likes: number;
+      dislikes: number;
+    }
+  ) => {
+    const attName = e.currentTarget.getAttribute('data-name');
+  
+    const data: { id: string; obj: {} } = {
+      id: article._id,
+      obj: { ...article },
+    };
+    if (attName === 'likes') {
+      data.obj = { ...article, likes: article.likes + 1 };
+     
+    } else {
+      data.obj = { ...article, dislikes: article.dislikes + 1 };
+     
+    }
+setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
+    dispatch(updateArticle(data));
+    dispatch(resetArticle());
   };
 
   const updateHandeler = (
@@ -108,36 +127,6 @@ function Posts() {
     dispatch(resetArticle());
   };
 
-  const responseHandeler = (
-    e: React.SyntheticEvent,
-    article: {
-      title: string;
-      text: string;
-      _id: string;
-      likes: number;
-      dislikes: number;
-    }
-  ) => {
-    const attName = e.currentTarget.getAttribute('data-name');
-
-    const data: { id: string; obj: {} } = {
-      id: id,
-      obj: {},
-    };
-    if (attName === 'likes') {
-      data.obj = { ...article, likes: article.likes + 1 };
-      setID(article._id);
-    } else {
-      data.obj = { ...article, dislikes: article.dislikes + 1 };
-      setID(article._id);
-    }
-
-    
-
-    dispatch(updateArticle(data));
-    dispatch(resetArticle());
-  };
-
   const resetFormHandeler = () => {
     setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
   };
@@ -155,11 +144,6 @@ function Posts() {
       toast.success(message);
     }
   }, [isSuccess]);
-
-
-
-
-
 
   if (isLoading) {
     return <small>Loading......</small>;

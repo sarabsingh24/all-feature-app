@@ -13,6 +13,7 @@ const connectDB = async () => {
    );
   } catch (error) {
       console.log(error)
+      //Exit process with faliour
       process.exit(1)
   }
 };

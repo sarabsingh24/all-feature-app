@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import userService from './userService';
 
 type IState = {
+  userObj:{}
   users: [];
   isLoading: boolean;
   isSuccess: boolean;
@@ -10,6 +11,7 @@ type IState = {
 };
 
 const initialState: IState = {
+    userObj:{},
   users: [],
   isLoading: false,
   isSuccess: false,
@@ -17,9 +19,9 @@ const initialState: IState = {
   message: '',
 };
 
-export const usersList = createAsyncThunk('users/get', async (_, thunkAPI) => {
+export const userLognied = createAsyncThunk('users/get', async (data:{}, thunkAPI) => {
   try {
-    return await userService.getUser();
+    return await userService.loginedUserInfo(data);
   } catch (error: any) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -45,18 +47,18 @@ const usersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(usersList.pending, (state) => {
+    builder.addCase(userLognied.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(usersList.fulfilled, (state, action) => {
+    builder.addCase(userLognied.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.users = action.payload;
+      state.userObj = action.payload;
       state.isSuccess = true;
       state.isError = false;
     });
-    builder.addCase(usersList.rejected, (state, action) => {
+    builder.addCase(userLognied.rejected, (state, action) => {
       state.isLoading = false;
-      state.users = [];
+      state.userObj = {};
       state.isError = true;
       state.isSuccess = false;
       state.message = action.payload;

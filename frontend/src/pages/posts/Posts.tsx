@@ -27,12 +27,22 @@ const formFields = {
 
 function Posts() {
   const [textArea, setTextArea] = useState(formFields);
+  const [artList, setArtList] = useState([]);
   const [editStatus, setEditStatus] = useState(false);
   const [id, setID] = useState('');
 
   const { articles, articleObj, isLoading, isSuccess, message } =
     useAppSelector((state) => state.articles);
+    
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(article());
+  }, []);
+
+  useEffect(() => {
+    setArtList(articles);
+  }, [articles]);
 
   const changeHandeler = (
     e:
@@ -45,8 +55,6 @@ function Posts() {
     setTextArea({ ...textArea, [name]: value });
   };
 
- 
-
   const submitPostHandeler = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -56,20 +64,28 @@ function Posts() {
     }
 
     if (editStatus) {
-   
+      const updateLikes: any = artList.map(
+        (item: { _id: string; likes: number; dislikes: number }) => {
+          if (item._id === id) {
+            return { ...artList, title: textArea.title, text: textArea.text };
+          }
+          return item;
+        }
+      );
+      setArtList(updateLikes);
+     
       const data: { id: string; obj: {} } = {
         id: id,
         obj: { ...textArea },
       };
-
+ 
       dispatch(updateArticle(data));
       setEditStatus(false);
     } else {
-    
       dispatch(articlePost(textArea));
     }
     setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
-    dispatch(article());
+
     dispatch(resetArticle());
   };
 
@@ -84,22 +100,39 @@ function Posts() {
     }
   ) => {
     const attName = e.currentTarget.getAttribute('data-name');
-  
-    const data: { id: string; obj: {} } = {
-      id: article._id,
-      obj: { ...article },
-    };
-    if (attName === 'likes') {
-      data.obj = { ...article, likes: article.likes + 1 };
-     
-    } else {
-      data.obj = { ...article, dislikes: article.dislikes + 1 };
-     
-    }
-setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
-    dispatch(updateArticle(data));
-    dispatch(resetArticle());
+
+    const updateLikes: any = artList.map(
+      (item: { _id: string; likes: number; dislikes: number }) => {
+        if (item._id === article._id) {
+          if (attName === 'likes') {
+            return { ...item, likes: item.likes + 1 };
+          } else {
+            return { ...item, dislikes: item.dislikes + 1 };
+          }
+        }
+        return item;
+      }
+    );
+
+    setArtList(updateLikes);
+    setID(article._id);
   };
+
+  useEffect(() => {
+    if (id) {
+      const updateObj: any = artList.find(
+        (item: { _id: string }) => item._id === id
+      );
+
+      const data: { id: string; obj: {} } = {
+        id: id,
+        obj: updateObj,
+      };
+      dispatch(updateArticle(data));
+      dispatch(resetArticle());
+      setID('');
+    }
+  }, [artList]);
 
   const updateHandeler = (
     e: React.SyntheticEvent,
@@ -123,6 +156,7 @@ setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
   };
 
   const deleteHandeler = (e: React.SyntheticEvent, id: string) => {
+    console.log(id)
     dispatch(deleteArticle(id));
     dispatch(resetArticle());
   };
@@ -131,19 +165,21 @@ setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
     setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
   };
 
-  useEffect(() => {
-    dispatch(article());
-  }, [articleObj]);
+  // useEffect(() => {
+  //   dispatch(resetArticle());
+  // }, []);
 
-  useEffect(() => {
-    dispatch(resetArticle());
-  }, [articles]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success(message);
+  //   }
+  // }, [isSuccess]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(message);
-    }
-  }, [isSuccess]);
+
+
+
+
+
 
   if (isLoading) {
     return <small>Loading......</small>;
@@ -179,8 +215,8 @@ setTextArea({ title: '', text: '', likes: 0, dislikes: 0 });
         </Flex2Column>
       </FormStyled>
 
-      {articles.length > 0 ? (
-        articles.map((post) => {
+      {artList.length > 0 ? (
+        artList.map((post) => {
           const { _id } = post;
           return (
             <PostsList

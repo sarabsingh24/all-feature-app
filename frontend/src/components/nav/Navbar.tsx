@@ -8,10 +8,11 @@ import {NavbarStyles} from './Navbar-styled'
 
 type navbarProps = {
   isLogined: boolean;
-  user:{
-    firstName?:string,
-    lastName?:string,
-  }
+  user: {
+    firstName?: string;
+    lastName?: string;
+    picturePath?:string;
+  };
 };
 
 function Navbar({ isLogined, user }: navbarProps) {
@@ -19,15 +20,17 @@ function Navbar({ isLogined, user }: navbarProps) {
   const navigate = useNavigate();
 
   const logoutHandeler = () => {
-    dispatch(resetUser());
-    dispatch(resetArticle());
+    
     navigate('/login');
+    dispatch(resetUser());
+    // dispatch(resetArticle());
   };
-
+console.log(user);
   return (
-    <NavbarStyles >
+    <NavbarStyles>
       {isLogined && (
         <span>
+          <img src={`http://localhost:5002${user.picturePath}`} alt={user.firstName} />
           Hi, {user.firstName}
         </span>
       )}

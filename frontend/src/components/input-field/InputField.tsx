@@ -4,7 +4,7 @@ import {InputFientStyle} from './InputField-style'
 
 type InputFieldProps = {
   type:string,
-  value: number | string,
+  value?: number | string,
   name?:string,
   placeholder?:string,
   handelchange: (event: React.ChangeEvent<HTMLInputElement>) => void

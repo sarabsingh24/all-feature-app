@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {userLognied} from '@reducers/users/usersReducer'
+
 
 
 import Dashboard from '@src/pages/dashboard/Dashboard';
@@ -13,11 +15,18 @@ import Layout from '@pages/layout/Layout'
 import Navbar from '@src/components/nav/Navbar';
 
 import ProtectedRoute from '@utility/protected-route/ProtectedRoute';
-import { useAppSelector } from '@src/reducers/hooks';
+import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
 import Test from '@src/pages/test/Test';
 
 function App() {
   const { isLogedin, user } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+
+useEffect(() => {
+  // dispatch(userLognied(user));
+ 
+}, [user]);
 
   return (
     <React.Fragment>

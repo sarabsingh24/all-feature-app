@@ -39,7 +39,7 @@ const Login = () => {
   useEffect(() => {
     if (isSuccess) {
       navigate('/');
-      // dispatch(resetUser());
+      dispatch(resetUser());
     }
   }, [isSuccess]);
 

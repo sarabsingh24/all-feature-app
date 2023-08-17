@@ -5,47 +5,82 @@ import InputButton from '@src/components/button/Button';
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
 import { registerUser, resetUser } from '@reducers/auth/authReducer';
 
-import {WrapperStyle} from './Register-style'
+import { WrapperStyle } from './Register-style';
+import { fileURLToPath } from 'url';
 
 type formProps = {
   firstName: string;
   lastName: string;
+  location: string;
+  occupation: string;
+ 
+  picturePath: string;
   email: string;
   password: string;
 };
 
-const formData = {
+const formFields = {
   firstName: '',
   lastName: '',
+  location: '',
+  occupation: '',
+  
+  picturePath: '',
   email: '',
   password: '',
 };
 
 const Register = () => {
-  const [form, setForm] = useState<formProps>(formData);
+  const [form, setForm] = useState<formProps>(formFields);
+  const [imgPath, setImgPath] = useState('');
 
   const { isSuccess } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const formData = new FormData();
 
   const inputChangeHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     let name = e.target.name;
+
     setForm({ ...form, [name]: value });
   };
 
   const submitFormHandeler = (e: React.SyntheticEvent) => {
     e.preventDefault();
+
     dispatch(registerUser(form));
+  };
+
+  const updateImgHandeler = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const formData= new FormData()
+    formData.append('picUrl', e.target.files![0]);
+    
+    const imgSaved = await fetch('http://localhost:5002/api/auth/userImg', {
+      method: 'post',
+      body: formData,
+    });
+
+    const imgResponse = await imgSaved.json();
+
+    console.log(imgResponse);
+    if (imgResponse.imagePath) {
+       console.log(imgResponse);
+       setForm({ ...form, picturePath: imgResponse.imagePath });
+    } else {
+      console.log('error');
+    }
   };
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(resetUser());
       navigate('/login');
+      // dispatch(resetUser());
     }
   }, [isSuccess]);
-
+  console.log(form)
   return (
     <WrapperStyle>
       <div className="box-width">
@@ -65,6 +100,34 @@ const Register = () => {
             value={form.lastName || ''}
             handelchange={inputChangeHandeler}
           />
+          <InputField
+            type="text"
+            name="location"
+            value={form.location || ''}
+            placeholder="Your location"
+            handelchange={inputChangeHandeler}
+          />
+          <InputField
+            type="text"
+            name="occupation"
+            value={form.occupation || ''}
+            placeholder="Your occupation"
+            handelchange={inputChangeHandeler}
+          />
+          <InputField
+            type="text"
+            name="picturePath"
+            value={form.picturePath || ''}
+            placeholder="Your picturePath"
+            handelchange={inputChangeHandeler}
+          />
+          <InputField
+            type="file"
+            name="fileName"
+            placeholder="Your img"
+            handelchange={updateImgHandeler}
+          />
+
           <InputField
             type="text"
             name="email"

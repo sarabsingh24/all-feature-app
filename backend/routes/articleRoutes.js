@@ -15,9 +15,9 @@ const router = express.Router();
 // router.get('/:useeId/articles', veryfyToken, getUserArticles);
 
 router.post('/',veryfyToken, setArticle);
-router.get('/', veryfyToken, getArticles);
-router.get('/:userId', veryfyToken, getUserArticles);
-router.get('/:id/likes', veryfyToken, likeArticle);
+router.get('/',veryfyToken, getArticles);
+router.get('/:userId', getUserArticles);
+router.put('/:id/likes', likeArticle);
 router.put('/:id', veryfyToken,updateArticle);
 router.delete('/:id',veryfyToken, deleteArticle);
 

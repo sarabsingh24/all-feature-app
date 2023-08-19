@@ -5,6 +5,7 @@ import config from 'config';
 import asyncHandler from 'express-async-handler';
 import { check, validationResult } from 'express-validator';
 import gravatar from 'gravatar';
+import cloudinary from '../cloudnary/data.js';
 
 /*  REGISTER USER  */
 //@desc     Add Users
@@ -101,7 +102,7 @@ export const login = asyncHandler(async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      picturePath:user.picturePath,
+      picturePath: user.picturePath,
       token: generateToken(user.id),
     });
   } else {
@@ -113,16 +114,14 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const userImg = asyncHandler(async (req, res) => {
-  
   res.send({
-    
-    message: "Image uploaded",
-    imagePath:`/${req.file.path}`,
-  })
+    message: 'Image uploaded',
+    imagePath: `/${req.file.path}`,
+  });
 });
 
 //JWT token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 };
 /* TEst USERS */

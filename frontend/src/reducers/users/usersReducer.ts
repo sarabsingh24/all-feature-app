@@ -51,6 +51,7 @@ const usersSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(userLognied.fulfilled, (state, action) => {
+      console.log(action.payload);
       state.isLoading = false;
       state.userObj = action.payload;
       state.isSuccess = true;

@@ -7,13 +7,14 @@ import { registerUser, resetUser } from '@reducers/auth/authReducer';
 
 import { WrapperStyle } from './Register-style';
 import { fileURLToPath } from 'url';
+import { toast } from 'react-toastify';
 
 type formProps = {
   firstName: string;
   lastName: string;
   location: string;
   occupation: string;
- 
+
   picturePath: string;
   email: string;
   password: string;
@@ -24,7 +25,7 @@ const formFields = {
   lastName: '',
   location: '',
   occupation: '',
-  
+
   picturePath: '',
   email: '',
   password: '',
@@ -34,10 +35,11 @@ const Register = () => {
   const [form, setForm] = useState<formProps>(formFields);
   const [imgPath, setImgPath] = useState('');
 
-  const { isSuccess } = useAppSelector((state) => state.auth);
+  const { user, isError, isSuccess, isLoading,message } = useAppSelector(
+    (state) => state.auth
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const formData = new FormData();
 
   const inputChangeHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
@@ -46,18 +48,16 @@ const Register = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const submitFormHandeler = (e: React.SyntheticEvent) => {
+  const submitFormHandeler = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     dispatch(registerUser(form));
   };
 
-  const updateImgHandeler = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const formData= new FormData()
+  const updateImgHandeler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
     formData.append('picUrl', e.target.files![0]);
-    
+
     const imgSaved = await fetch('http://localhost:5002/api/auth/userImg', {
       method: 'post',
       body: formData,
@@ -67,20 +67,27 @@ const Register = () => {
 
     console.log(imgResponse);
     if (imgResponse.imagePath) {
-       console.log(imgResponse);
-       setForm({ ...form, picturePath: imgResponse.imagePath });
+      console.log(imgResponse);
+      setForm({ ...form, picturePath: imgResponse.imagePath });
     } else {
       console.log('error');
     }
   };
 
   useEffect(() => {
-    if (isSuccess) {
-      navigate('/login');
-      // dispatch(resetUser());
+    if (isError) {
+      toast.error(message);
     }
-  }, [isSuccess]);
-  console.log(form)
+    if (isSuccess ) {
+      console.log(user, isError, isSuccess, isLoading, message);
+      navigate('/login');
+     
+    }
+
+
+    //  dispatch(resetUser());
+  }, [user, isError, isSuccess, isLoading, message]);
+
   return (
     <WrapperStyle>
       <div className="box-width">

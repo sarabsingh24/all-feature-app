@@ -1,34 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { WrapperStyle, ParaStyle, TitleStyle, FlexSB } from './Post-styled';
+import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
+import {
+  article,
+  articlePost,
+  updateArticle,
+  likesArticle,
+  deleteArticle,
+  resetArticle,
+  // responseArticles,
+} from '@src/reducers/articles/articleReductrs';
+
+type articleObj = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  title: string;
+  description: string;
+  likes: {};
+  location: string;
+  userPicturePath: string;
+  picturePath: string;
+  comments: [];
+  createdAt: string;
+};
 
 type ProductListProps = {
-  article: {
-    _id: string;
-    title: string;
-    text: string;
-    likes: number;
-    dislikes: number;
-    createdAt:string;
-  };
-  responseHandeler: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    article: {
-      title: string;
-      text: string;
-      _id: string;
-      likes: number;
-      dislikes: number;
-    }
-  ) => void;
+  article: articleObj;
+  
   updateHandeler: (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    article: {
-      title: string;
-      text: string;
-      _id: string;
-      likes: number;
-      dislikes: number;
-    }
+    article: articleObj
   ) => void;
   deleteHandeler: (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -40,33 +42,57 @@ const PostsList = ({
   article,
   updateHandeler,
   deleteHandeler,
-  responseHandeler,
-}: ProductListProps) => {
+}:
+ProductListProps) => {
+  
+  
+  const dispatch = useAppDispatch();
+  const likesHandeler = (
+    e: React.SyntheticEvent,
+    article: {
+      _id: string;
+    }
+  ) => {
+    const data: { id: string; obj: {} } = {
+      id: article._id,
+      obj: article,
+    };
+
+    dispatch(likesArticle(data));
+  };
+
+ 
+
   return (
     <WrapperStyle>
-      <header>
-        <img src="" alt="image title" />
-      </header>
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}} >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <TitleStyle>{article.title}</TitleStyle>
-        <small>{article.createdAt}</small>
-      </div>
+        <small>id:{article._id}</small>
 
-      <ParaStyle>{article.text}</ParaStyle>
+        {/* <small>{article.createdAt}</small> */}
+      </div>
+      <div>{article.description}</div>
+      <small>by:{article.firstName}</small>
       <FlexSB>
         <div
           className="art-info"
           data-name="likes"
-          onClick={(event) => responseHandeler(event, article)}
+          onClick={(event) => likesHandeler(event, article)}
         >
-          likes:{article.likes}
+          likes:{Object.keys(article.likes).length}
         </div>
         <div
           className="art-info"
           data-name="dislike"
-          onClick={(event) => responseHandeler(event, article)}
+          // onClick={(event) => responseHandeler(event, article)}
         >
-          dislikes:{article.dislikes}
+          {/* dislikes:{article.dislikes} */}
         </div>
         <div
           className="art-info"

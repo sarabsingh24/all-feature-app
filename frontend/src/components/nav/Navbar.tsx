@@ -1,40 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
-import { resetUser } from '@reducers/auth/authReducer';
+import { resetUser, logoutUser } from '@reducers/auth/authReducer';
 import { resetArticle } from '@reducers/articles/articleReductrs';
 
 import {NavbarStyles} from './Navbar-styled'
 
 type navbarProps = {
-  isLogined: boolean;
-  user: {
+  isLogedIn: boolean;
+  user?: {
     firstName?: string;
     lastName?: string;
-    picturePath?:string;
-  };
+    picturePath?: string;
+  } | null;
+  
 };
 
-function Navbar({ isLogined, user }: navbarProps) {
+function Navbar({ isLogedIn, user }: navbarProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const logoutHandeler = () => {
-    
-    navigate('/login');
     dispatch(resetUser());
+    dispatch(logoutUser());
+    navigate('/login');
+    
+    
     // dispatch(resetArticle());
   };
-console.log(user);
+
+  useEffect(() => {}, []);
+
   return (
     <NavbarStyles>
-      {isLogined && (
+      {isLogedIn && (
         <span>
-          <img src={`http://localhost:5002${user.picturePath}`} alt={user.firstName} />
-          Hi, {user.firstName}
+          {/* <img
+            src={`http://localhost:3000${user.picturePath}`}
+            alt={user.firstName}
+          /> */}
+          Hi, {user?.firstName}
         </span>
       )}
-      {isLogined && <button onClick={logoutHandeler}>Logout</button>}
+      {isLogedIn && <button onClick={logoutHandeler}>Logout</button>}
     </NavbarStyles>
   );
 }

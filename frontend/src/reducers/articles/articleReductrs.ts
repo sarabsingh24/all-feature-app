@@ -1,9 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Console } from 'console';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+
 import articleService from './articleService';
 
 type IState = {
-  articleObj: {};
   articles: [];
   isLoading: boolean;
   isSuccess: boolean;
@@ -12,7 +11,6 @@ type IState = {
 };
 
 const initialState: IState = {
-  articleObj: {},
   articles: [],
   isLoading: false,
   isSuccess: false,
@@ -20,24 +18,32 @@ const initialState: IState = {
   message: '',
 };
 
-export const article = createAsyncThunk('articles/get', async (_, thunkAPI) => {
-  try {
-    return await articleService.getArticles();
-  } catch (error: any) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const article = createAsyncThunk(
+  'articles/get',
+  async (_, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await articleService.getArticles(token);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const articlePost = createAsyncThunk(
   'articles/post',
-  async (data: {}, thunkAPI) => {
+  async (data: {}, thunkAPI: any) => {
     try {
-      return await articleService.setArticles(data);
+      const token = thunkAPI.getState().auth.user.token;
+
+      return await articleService.setArticles(data, token);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -53,9 +59,10 @@ export const articlePost = createAsyncThunk(
 
 export const updateArticle = createAsyncThunk(
   'articles/update',
-  async (data: { id: string; obj: {} }, thunkAPI) => {
+  async (data: { id: string; obj: {} }, thunkAPI: any) => {
     try {
-      return await articleService.updateArticles(data);
+      const token = thunkAPI.getState().auth.user.token;
+      return await articleService.updateArticles(data, token);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -69,12 +76,32 @@ export const updateArticle = createAsyncThunk(
   }
 );
 
+export const likesArticle = createAsyncThunk(
+  'articles/likes',
+  async (data: { id: string; obj: {} }, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+
+      return await articleService.likesArticles(data, token);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const deleteArticle = createAsyncThunk(
   'articles/delete',
-  async (data: string, thunkAPI) => {
+  async (data: string, thunkAPI: any) => {
     try {
-      return await articleService.deleteArticles(data);
+      const token = thunkAPI.getState().auth.user.token;
+      return await articleService.deleteArticles(data, token);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -96,7 +123,7 @@ const usersSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
-     
+      state.message = '';
     },
   },
   extraReducers: (builder) => {
@@ -122,14 +149,14 @@ const usersSlice = createSlice({
       })
       .addCase(articlePost.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.articleObj = action.payload;
+        state.articles = action.payload;
         state.isSuccess = true;
         state.isError = false;
         state.message = 'One Article Posted';
       })
       .addCase(articlePost.rejected, (state, action) => {
         state.isLoading = false;
-        state.articleObj = {};
+
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
@@ -140,7 +167,7 @@ const usersSlice = createSlice({
       })
       .addCase(updateArticle.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.articleObj = action.payload;
+        state.articles = action.payload;
         state.isSuccess = true;
         state.isError = false;
         state.message = 'One Article Updated';
@@ -151,6 +178,15 @@ const usersSlice = createSlice({
         state.isSuccess = false;
         state.message = action.payload;
       })
+
+      ////LIKES
+      .addCase(likesArticle.pending, (state) => {})
+      .addCase(likesArticle.fulfilled, (state, action) => {
+        state.articles = action.payload;
+      })
+      .addCase(likesArticle.rejected, (state, action) => {
+        state.message = action.payload;
+      })
       ////DELETE
       .addCase(deleteArticle.pending, (state) => {
         state.isLoading = true;
@@ -158,7 +194,7 @@ const usersSlice = createSlice({
       .addCase(deleteArticle.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.articleObj = action.payload;
+        state.articles = action.payload;
         state.isError = false;
         state.message = 'One Article Deleted';
       })

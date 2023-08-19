@@ -21,7 +21,9 @@ const formLable = {
 const Login = () => {
   const [form, setForm] = useState<LoginProps>(formLable);
 
-  const { isSuccess } = useAppSelector((state) => state.auth);
+  const { user, isError, isSuccess, isLoading, message } = useAppSelector(
+    (state) => state.auth
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -37,11 +39,11 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (user||isSuccess) {
       navigate('/');
-      dispatch(resetUser());
+      // dispatch(resetUser());
     }
-  }, [isSuccess]);
+  }, [user,isSuccess]);
 
   return (
     <WrapperStyle>

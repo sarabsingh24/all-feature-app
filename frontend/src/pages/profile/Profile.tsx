@@ -1,66 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import InputField from '@components/input-field/InputField';
 import InputButton from '@src/components/button/Button';
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
-import {
-  registerUser,
-  resetUser,
-  uploadImage,
-} from '@reducers/auth/authReducer';
+import { getUserInfo } from '@reducers/users/usersReducer';
+import { WrapperStyle } from './Profile-style';
 
-import { WrapperStyle } from './Register-style';
-import { fileURLToPath } from 'url';
-import { toast } from 'react-toastify';
+import { updateUser, uploadImage } from '@reducers/auth/authReducer';
 
-type formProps = {
-  firstName: string;
-  lastName: string;
-  location: string;
-  occupation: string;
-
-  picturePath?: string;
-  email: string;
-  password: string;
-};
-
-const formFields = {
+const formData = {
+  _id: '',
   firstName: '',
   lastName: '',
+  email: '',
   location: '',
   occupation: '',
+  userPicturePath: '',
   picturePath: '',
-  email: '',
-  password: '',
 };
 
-const Register = () => {
-  const [form, setForm] = useState<formProps>(formFields);
-  const [imgPath, setImgPath] = useState('');
+const Profile = () => {
+  const [form, setForm] = useState(formData);
+  const [upddateField, setUpddateField] = useState({});
+  const [IsDiseabled] = useState(true);
 
-  const { user, isError, isSuccess, isLoading, message, singleImage } =
-    useAppSelector((state) => state.auth);
-
+  const { userProfile, singleImage } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const location = useLocation();
+  const { _id } = location.state;
 
-  const allFielsFilled = Object.values(form).some((value) => value === '');
+  useEffect(() => {
+    
+      form['firstName'] =userProfile['firstName'];
+      form['lastName'] = userProfile['lastName'];
+      form['location'] = userProfile['location'];
+      form['occupation'] = userProfile['occupation'];
+      form['userPicturePath'] = userProfile['userPicturePath'];
+      form['picturePath'] = userProfile['picturePath'];
+      form['email'] = userProfile['email'];
+
+//       for (let key in form){
+// key = userProfile[key];
+//       }
+  
+    setForm(userProfile);
+  }, []);
 
   const inputChangeHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     let name = e.target.name;
 
     setForm({ ...form, [name]: value });
+    setUpddateField({ ...upddateField, [name]: value });
   };
 
   const submitFormHandeler = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!allFielsFilled) {
-      dispatch(registerUser(form));
-    }
+    const data = {
+      id: _id,
+      obj: form,
+    };
+
+    dispatch(updateUser(data));
   };
 
-  const updateImgHandeler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateImgHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
     formData.append('picUrl', e.target.files![0]);
 
@@ -68,61 +72,55 @@ const Register = () => {
   };
 
   useEffect(() => {
+   
     if (singleImage !== '') {
       setForm({ ...form, picturePath: singleImage });
     }
   }, [singleImage]);
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
+    dispatch(getUserInfo(_id));
+  }, [_id, dispatch, userProfile]);
 
-    if (!allFielsFilled && isSuccess) {
-      navigate('/login');
-      dispatch(resetUser());
-    }
 
-    //  dispatch(resetUser());
-  }, [user, isError, isSuccess, isLoading, message]);
 
   return (
     <WrapperStyle>
       <div className="box-width">
-        <h3>Register User</h3>
+        <h3>update profile</h3>
         <form onSubmit={submitFormHandeler} className="center-box">
           <InputField
             type="text"
             name="firstName"
             placeholder="First Name"
-            value={form.firstName || ''}
+            value={form?.firstName || ''}
             handelchange={inputChangeHandeler}
           />
           <InputField
             type="text"
             name="lastName"
             placeholder="Last Name"
-            value={form.lastName || ''}
+            value={form?.lastName || ''}
             handelchange={inputChangeHandeler}
           />
           <InputField
             type="text"
             name="location"
-            value={form.location || ''}
+            value={form?.location || ''}
             placeholder="Your location"
             handelchange={inputChangeHandeler}
           />
           <InputField
             type="text"
             name="occupation"
-            value={form.occupation || ''}
+            value={form?.occupation || ''}
             placeholder="Your occupation"
             handelchange={inputChangeHandeler}
           />
           <InputField
             type="text"
             name="picturePath"
-            value={form.picturePath || ''}
+            value={form?.picturePath || ''}
             placeholder="Your picturePath"
             handelchange={inputChangeHandeler}
           />
@@ -134,28 +132,19 @@ const Register = () => {
           />
 
           <InputField
+            disabled={IsDiseabled}
             type="text"
             name="email"
-            value={form.email || ''}
-            placeholder="Your Email"
+            value={form?.email || ''}
+            placeholder={form?.email}
             handelchange={inputChangeHandeler}
           />
-          <InputField
-            type="password"
-            name="password"
-            value={form.password || ''}
-            placeholder="Your Password"
-            handelchange={inputChangeHandeler}
-          />
+
           <InputButton btnType="submit" btnName="Submit" />
         </form>
-        <small>
-          Already have an account?
-          <Link to="/login"> Log In</Link>
-        </small>
       </div>
     </WrapperStyle>
   );
 };
 
-export default Register;
+export default Profile;

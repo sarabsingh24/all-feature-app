@@ -32,9 +32,7 @@ function Posts() {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(article());
-  }, []);
+  
 
   const updateHandeler = useCallback(
     (
@@ -81,6 +79,10 @@ function Posts() {
       dispatch(resetArticle());
     }
   }, [isSuccess, message]);
+
+useEffect(() => {
+  dispatch(article());
+}, []);
 
   if (isLoading) {
     return <small>Loading......</small>;

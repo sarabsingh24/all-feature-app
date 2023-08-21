@@ -1,6 +1,6 @@
-import { register, login } from '../controllers/authController.js';
+import { register, login, updateUser } from '../controllers/authController.js';
 import { check, validationResult } from 'express-validator';
-
+import { veryfyToken } from '../middleware/auth.js';
 import express from 'express';
 const router = express.Router();
 
@@ -18,6 +18,6 @@ router.post('/login', [
     check('password', 'Password leangth should be 6 or more character').isLength({min:6}),
   ], login);
 
- 
+ router.put('/:id', veryfyToken, updateUser);
  
 export default router;

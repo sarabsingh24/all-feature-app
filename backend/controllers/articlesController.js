@@ -38,27 +38,6 @@ export const setArticle = asyncHandler(async (req, res) => {
   }
 });
 
-// export const setArticleOLD = asyncHandler(async (req, res) => {
-//   const { title, text, likes, dislikes } = req.body;
-//   if (!title) {
-//     res.status(400);
-//     throw new Error('Please add a title value controller');
-//   }
-//   if (!text) {
-//     res.status(400);
-//     throw new Error('Please add a text value controller');
-//   }
-
-//   const article = await Article.create({
-//     title: title,
-//     text: text,
-//     likes: 99,
-//     dislikes: 88,
-//     user: req.user.id,
-//   });
-
-//   res.status(200).json(article);
-// });
 
 //@desc     Fetch Articles
 //@route    GET /api/articles/

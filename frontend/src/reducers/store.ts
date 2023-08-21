@@ -4,8 +4,6 @@ import userSlice from './users/usersReducer';
 import authSlice from './auth/authReducer';
 import articleSlice from './articles/articleReductrs';
 
-
-
 import {
   persistReducer,
   FLUSH,
@@ -23,16 +21,17 @@ const persistConfig = {
   storage,
 };
 
- const reducer = combineReducers({
-   auth: authSlice,
-   users: userSlice,
-   articles: articleSlice,
-   counter: counterSlice,
- });
+const reducer = combineReducers({
+  auth: authSlice,
+  users: userSlice,
+  articles: articleSlice,
+
+  counter: counterSlice,
+});
 
 const persistedReducer = persistReducer(persistConfig, reducer);
 
-  const store = configureStore({
+const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -98,10 +98,10 @@ export const likesArticle = createAsyncThunk(
 
 export const deleteArticle = createAsyncThunk(
   'articles/delete',
-  async (data: string, thunkAPI: any) => {
+  async (id: string, thunkAPI: any) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await articleService.deleteArticles(data, token);
+      return await articleService.deleteArticles(id, token);
     } catch (error: any) {
       const message =
         (error.response &&

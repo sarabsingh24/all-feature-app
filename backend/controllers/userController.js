@@ -4,6 +4,7 @@ import User from '../models/User.js';
 //@desc     Fetch Users================================================
 //@route    GET /api/users/
 export const getUsers = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const getUserList = await User.find();
   res.status(200).json(getUserList);
 });
@@ -12,12 +13,31 @@ export const getUsers = asyncHandler(async (req, res) => {
 //@route    GET /api/users/:id
 //@access   Private
 export const getUser = asyncHandler(async (req, res) => {
+  console.log('getUser', req.body, req.params.id);
   const { _id, firstName, email } = await User.findById(req.params.id);
   // const { _id, firstName, email } = await User.findById(req.user.id);
+
   res.status(200).json({
     id: _id,
     firstName,
     email,
+  });
+});
+
+//@desc     Fetch User profile================================================
+//@route    GET /api/users/:id
+//@access   Private
+export const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  res.status(200).json({
+    firstName: user.firstName,
+    lastName: user.firstName,
+    email: user.email,
+    location: user.location,
+    occupation: user.occupation,
+    userPicturePath: user.userPicturePath,
+    picturePath: user.picturePath,
   });
 });
 
@@ -80,20 +100,7 @@ export const addRemoveFriend = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc     Update single Users================================================
-//@route    PATCH /api/users/:id
-export const updateUser = asyncHandler(async (req, res) => {
-  const article = await User.findById(req.params.id);
 
-  if (!article) {
-    res.status(401);
-    throw new Error('article not found');
-  }
-
-  const updateUser = await User.findByIdAndUpdate(id, req.body, { new: true });
-
-  res.status(200).json(updateUser);
-});
 
 //@desc     Remove single Users================================================
 //@route    DELETE /api/users/:id

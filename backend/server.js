@@ -32,8 +32,8 @@ import { register, userImg } from './controllers/authController.js';
 // import { register } from './controllers/authController.js';
 
 /* ==== configration ========== */
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 
 connectDB();
@@ -48,12 +48,16 @@ app.use(bodyParser.json({ limit: '30mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
-// app.use('/assets', express.static(path.join(__dirname, 'upload/assets')));
+app.use(
+  '/assets',
+  express.static(path.join(__dirname, 'frontend/public/assets'))
+);
 
 /*  File Storage */
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/assets');
+    // cb(null, 'uploads/assets');
+    cb(null, 'frontend/public/assets');
   },
   filename: function (req, file, cb) {
     const name = file.originalname;

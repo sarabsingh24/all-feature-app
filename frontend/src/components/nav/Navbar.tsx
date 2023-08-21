@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
 import { resetUser, logoutUser } from '@reducers/auth/authReducer';
 import { resetArticle } from '@reducers/articles/articleReductrs';
 
-import {NavbarStyles} from './Navbar-styled'
+import { NavbarStyles, LogoArea ,OtherLinks} from './Navbar-styled';
 
 type navbarProps = {
   isLogedIn: boolean;
@@ -17,32 +17,58 @@ type navbarProps = {
 };
 
 function Navbar({ isLogedIn, user }: navbarProps) {
+const { userProfile } = useAppSelector(state=> state.auth);
+
+const userPic = userProfile?.picturePath || user?.picturePath; 
+const ind = userPic?.indexOf('assets');
+const trimedPath = userPic?.slice(ind);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const logoutHandeler = () => {
     dispatch(resetUser());
-    dispatch(logoutUser());
+    dispatch(logoutUser()); 
     navigate('/login');
     
     
     // dispatch(resetArticle());
   };
 
-  useEffect(() => {}, []);
 
   return (
     <NavbarStyles>
       {isLogedIn && (
-        <span>
-          {/* <img
-            src={`http://localhost:3000${user.picturePath}`}
-            alt={user.firstName}
-          /> */}
-          Hi, {user?.firstName}
-        </span>
+        <LogoArea>
+          <img
+            src={`http://localhost:3000/${trimedPath}`}
+            alt={user?.firstName}
+            className="img-style"
+          />
+          <span className="name-sty">
+            {' '}
+            Hi, {userProfile.firstName || user?.firstName}
+          </span>
+        </LogoArea>
       )}
-      {isLogedIn && <button onClick={logoutHandeler}>Logout</button>}
+
+      {isLogedIn && (
+        <OtherLinks>
+          <Link to="/" className="link-style">
+            Home
+          </Link>
+
+          <Link to="/myposts" className="link-style">
+            My Posts
+          </Link>
+          <Link to="/profile" state={user} className="link-style">
+            Profile
+          </Link>
+          <span onClick={logoutHandeler} className="link-style">
+            Logout
+          </span>
+        </OtherLinks>
+      )}
     </NavbarStyles>
   );
 }

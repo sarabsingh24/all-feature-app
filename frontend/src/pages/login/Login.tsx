@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import InputField from '@components/input-field/InputField';
 import InputButton from '@src/components/button/Button';
-import {WrapperStyle} from './Login-style'
+import { WrapperStyle } from './Login-style';
 
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
 import { loginUser, resetUser } from '@reducers/auth/authReducer';
@@ -16,7 +16,7 @@ type LoginProps = {
 const formLable = {
   email: '',
   password: '',
-};
+}; 
 
 const Login = () => {
   const [form, setForm] = useState<LoginProps>(formLable);
@@ -39,18 +39,18 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (user||isSuccess) {
+   const IsUserExist = Object.values(user).filter(item=> item !== '');
+    if (IsUserExist.length > 0) {
       navigate('/');
-      // dispatch(resetUser());
     }
-  }, [user,isSuccess]);
+  }, [user]);
+ 
 
   return (
     <WrapperStyle>
-      
-      <div className='box-width'>
+      <div className="box-width">
         <h3> Login</h3>
-        <form onSubmit={submitFormHandeler} className='form-box' >
+        <form onSubmit={submitFormHandeler} className="form-box">
           <InputField
             type="text"
             name="email"

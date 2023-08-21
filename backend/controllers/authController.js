@@ -103,6 +103,8 @@ export const login = asyncHandler(async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       picturePath: user.picturePath,
+      location: user.location,
+      occupation: user.occupation,
       token: generateToken(user.id),
     });
   } else {
@@ -114,10 +116,27 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const userImg = asyncHandler(async (req, res) => {
-  res.send({
+  return res.send({
     message: 'Image uploaded',
     imagePath: `/${req.file.path}`,
   });
+});
+
+//@desc     Update single Users================================================
+//@route    PATCH /api/users/:id
+export const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error('user not found');
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+
+  res.status(200).json(updatedUser);
 });
 
 //JWT token

@@ -1,3 +1,4 @@
+import { disable } from 'colors';
 import React from 'react'
 import {InputFientStyle} from './InputField-style' 
 
@@ -7,14 +8,17 @@ type InputFieldProps = {
   value?: number | string,
   name?:string,
   placeholder?:string,
-  handelchange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  disabled?:boolean
+  handelchange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 };
 
 const InputField = ({
   type,
   value,
-  name,placeholder,
+  name,
+  placeholder,
   handelchange,
+  disabled,
 }: InputFieldProps) => {
   return (
     <InputFientStyle
@@ -23,6 +27,7 @@ const InputField = ({
       placeholder={placeholder}
       value={value}
       onChange={handelchange}
+      disabled ={disabled ? true : false}
     />
   );
 };

@@ -10,6 +10,7 @@ export const getArticles = async (token:string) => {
      },
    };
   const response = await axios.get(API_URL + '/', config);
+
   return response.data;
 };
 
@@ -53,13 +54,13 @@ export const likesArticles = async (data: { id: string; obj: {} }, token: string
 };
 
 // DELETE articles
-export const deleteArticles = async (data: string, token:string) => {
+export const deleteArticles = async (id: string, token:string) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.delete(API_URL + `/${data}`, config);
+  const response = await axios.delete(API_URL + `/${id}`, config);
   return response.data;
 };
 

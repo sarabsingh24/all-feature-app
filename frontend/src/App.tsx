@@ -6,9 +6,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from '@src/pages/login/Login';
 import Register from '@src/pages/register/Register';
 import Profile from '@src/pages/profile/Profile';
-import MyPost from '@src/pages/mypost/MyPost';
+import MyPost from '@src/pages/posts/MyPost';
 
 import Layout from '@pages/layout/Layout';
+import Posts from '@pages/posts/Posts'
 import Navbar from '@src/components/nav/Navbar';
 
 import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
@@ -35,7 +36,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={isLogedIn ? <Layout /> : <Login />} />
+          <Route path="/" element={isLogedIn ? <Posts /> : <Login />} />
           {/* <Route path="/profile" element={<Profile user={user} />} /> */}
           <Route path="/myposts" element={<MyPost />} />
           <Route

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { WrapperStyle, ParaStyle, TitleStyle, FlexSB } from './Post-styled';
+import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
 import {
   article,
@@ -10,6 +11,16 @@ import {
   resetArticle,
   // responseArticles,
 } from '@src/reducers/articles/articleReductrs';
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Stack from 'react-bootstrap/Stack';
+import Badge from 'react-bootstrap/Badge';
+import Card from 'react-bootstrap/Card';
+
+import VerticallyCenteredModal from '@components/modal/VerticalCenterModal';
 
 type articleObj = {
   _id: string;
@@ -27,26 +38,28 @@ type articleObj = {
 
 type ProductListProps = {
   article: articleObj;
-  
-  updateHandeler: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    article: articleObj
-  ) => void;
-  deleteHandeler: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    id: string
-  ) => void;
 };
 
-const PostsList = ({
-  article,
-  updateHandeler,
-  deleteHandeler,
-}:
-ProductListProps) => {
-  
-  
+const PostsList = ({ article }: ProductListProps) => {
+  const [textArea, setTextArea] = useState({} as articleObj);
+  const [show, setShow] = useState(false);
+  const [IsBtnEnable, setIsBtnEnable] = useState(false);
+
   const dispatch = useAppDispatch();
+
+  const handleClose = () => {
+    setShow(false);
+  };
+  const handleShow = () => setShow(true);
+
+  const ind = article?.picturePath?.indexOf('assets');
+  const trimedPath = article?.picturePath?.slice(ind);
+
+  const deleteHandeler = useCallback((e: React.SyntheticEvent, id: string) => {
+    dispatch(deleteArticle(id));
+    dispatch(resetArticle());
+  }, []);
+
   const likesHandeler = (
     e: React.SyntheticEvent,
     article: {
@@ -61,52 +74,58 @@ ProductListProps) => {
     dispatch(likesArticle(data));
   };
 
- 
+  useEffect(() => {
+    setTextArea(article);
+  }, []);
 
   return (
     <WrapperStyle>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <TitleStyle>{article.title}</TitleStyle>
-        <small>id:{article._id}</small>
+      <Card>
+        <Card.Img
+          variant="top"
+          className="img-style"
+          src={`http://localhost:3000/${trimedPath}`}
+        />
+        <Card.Body>
+          <Card.Title>{article.title}</Card.Title>
+          <Card.Text>{article.description}</Card.Text>
 
-        {/* <small>{article.createdAt}</small> */}
-      </div>
-      <div>{article.description}</div>
-      <small>by:{article.firstName}</small>
-      <FlexSB>
-        <div
-          className="art-info"
-          data-name="likes"
-          onClick={(event) => likesHandeler(event, article)}
-        >
-          likes:{Object.keys(article.likes).length}
-        </div>
-        <div
-          className="art-info"
-          data-name="dislike"
-          // onClick={(event) => responseHandeler(event, article)}
-        >
-          {/* dislikes:{article.dislikes} */}
-        </div>
-        <div
-          className="art-info"
-          onClick={(event) => updateHandeler(event, article)}
-        >
-          Edit
-        </div>
-        <div
-          className="art-info"
-          onClick={(event) => deleteHandeler(event, article._id)}
-        >
-          Delete
-        </div>
-      </FlexSB>
+          <FlexSB>
+            <Button
+              variant="light"
+              size="sm"
+              onClick={(event) => likesHandeler(event, article)}
+            >
+              Like:
+              {Object.keys(article.likes).length}
+            </Button>
+
+            <Button variant="light" size="sm">
+              Comments
+            </Button>
+
+            <Button variant="light" size="sm" onClick={handleShow}>
+              Edit
+            </Button>
+            <VerticallyCenteredModal
+              show={show}
+              setShow={setShow}
+              handleClose={handleClose}
+              IsBtnEnable={IsBtnEnable}
+              setIsBtnEnable={setIsBtnEnable}
+              article={article}
+            />
+
+            <Button
+              variant="light"
+              size="sm"
+              onClick={(event) => deleteHandeler(event, article._id)}
+            >
+              Delete
+            </Button>
+          </FlexSB>
+        </Card.Body>
+      </Card>
     </WrapperStyle>
   );
 };

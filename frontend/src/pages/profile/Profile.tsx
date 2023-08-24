@@ -7,6 +7,7 @@ import { getUserInfo } from '@reducers/users/usersReducer';
 import { WrapperStyle } from './Profile-style';
 
 import { updateUser, uploadImage } from '@reducers/auth/authReducer';
+import Layout from '@pages/layout/Layout';
 
 const formData = {
   _id: '',
@@ -20,31 +21,17 @@ const formData = {
 };
 
 const Profile = () => {
-  const [form, setForm] = useState(formData);
+  const [form, setForm] = useState(
+    formData,
+   
+  );
   const [upddateField, setUpddateField] = useState({});
   const [IsDiseabled] = useState(true);
 
   const { userProfile, singleImage } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const { _id } = location.state;
-
-  useEffect(() => {
-    
-      form['firstName'] =userProfile['firstName'];
-      form['lastName'] = userProfile['lastName'];
-      form['location'] = userProfile['location'];
-      form['occupation'] = userProfile['occupation'];
-      form['userPicturePath'] = userProfile['userPicturePath'];
-      form['picturePath'] = userProfile['picturePath'];
-      form['email'] = userProfile['email'];
-
-//       for (let key in form){
-// key = userProfile[key];
-//       }
-  
-    setForm(userProfile);
-  }, []);
+  const locationState = useLocation();
+  const user = locationState.state;
 
   const inputChangeHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
@@ -57,11 +44,12 @@ const Profile = () => {
   const submitFormHandeler = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
-      id: _id,
+      id: user._id,
       obj: form,
     };
 
     dispatch(updateUser(data));
+   
   };
 
   const updateImgHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,17 +60,23 @@ const Profile = () => {
   };
 
   useEffect(() => {
-   
-    if (singleImage !== '') {
+    if (singleImage !== '' ) {
+      // setUpddateField({ ...upddateField, picturePath: singleImage });
       setForm({ ...form, picturePath: singleImage });
     }
   }, [singleImage]);
 
   useEffect(() => {
-    dispatch(getUserInfo(_id));
-  }, [_id, dispatch, userProfile]);
+    dispatch(getUserInfo(user._id));
+    // setForm({ ...form, picturePath: userProfile.picturePath });
+  }, [userProfile]);
 
-
+  useEffect(() => {
+    const newObj = { ...user, picturePath: userProfile?.picturePath || user?.picturePath};
+   
+    delete newObj.token;
+    setForm(newObj);
+  }, [locationState.state]);
 
   return (
     <WrapperStyle>
@@ -118,6 +112,7 @@ const Profile = () => {
             handelchange={inputChangeHandeler}
           />
           <InputField
+            disabled={IsDiseabled}
             type="text"
             name="picturePath"
             value={form?.picturePath || ''}
@@ -147,4 +142,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Layout(Profile);

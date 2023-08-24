@@ -26,9 +26,6 @@ export const updateUserFun = async (
   data: { id: string; obj: {} },
   token: string
 ) => {
-
-
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

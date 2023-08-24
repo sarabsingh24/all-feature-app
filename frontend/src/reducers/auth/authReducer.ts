@@ -96,6 +96,8 @@ export const uploadImage = createAsyncThunk(
   }
 );
 
+
+
 export const updateUser = createAsyncThunk(
   'auth/updateUser',
   async (data: { id: string; obj: {} }, thunkAPI: any) => {
@@ -121,14 +123,17 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     resetUser: (state) => {
+     
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
       state.message = '';
       state.singleImage = '';
+      
     },
     logoutUser: (state) => {
       state.user = { ...initialState.userProfile };
+      state.userProfile = { ...initialState.userProfile };
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
@@ -190,6 +195,7 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
+       
         state.isLoading = false;
         state.userProfile = action.payload;
         state.isSuccess = true;

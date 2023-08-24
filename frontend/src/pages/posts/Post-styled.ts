@@ -1,19 +1,32 @@
 import styled from 'styled-components';
 
-export const FormStyled = styled.form``;
+export const FormStyled = styled.form`
+  margin-bottom: 32px;
+  .upload-img-btn {
+    position: absolute;
+    opacity: 0;
+    top: -10px;
+    left: -13px;
+  }
+`;
 
 export const WrapperStyle = styled.section`
-  margin-top: 32px;
+  margin-bottom: 32px;
   border-radius: 4px;
-  background: #f4f4f499;
-  padding: 18px 16px 0 16px;
-  border: 1px solid #e3e3e3;
+  .img-style{
+    height: 320px;
+    object-fit: cover ;
+    
+    
+  }
+  
 `;
 
 export const TitleStyle = styled.h3``;
 export const ParaStyle = styled.p`
   color: #60656f;
   font-size: 13px;
+  
 `;
 
 export const FlexSB = styled.div`

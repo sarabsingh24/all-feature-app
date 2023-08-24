@@ -7,4 +7,5 @@ export const InputFientStyle = styled.input`
   border-radius: 4px;
   margin-bottom: 12px;
   border: 1px solid #e1e1e1;
+  
 `;

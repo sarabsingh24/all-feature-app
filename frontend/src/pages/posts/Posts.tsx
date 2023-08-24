@@ -5,73 +5,22 @@ import {
   deleteArticle,
   resetArticle,
 } from '@src/reducers/articles/articleReductrs';
+import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 
+import Layout from '@pages/layout/Layout';
 import PostForm from './PostForm';
 import PostsList from './PostsList';
 
-const formFields = {
-  title: '',
-  description: '',
-  likes: {},
-  firstName: '',
-  lastName: '',
-  location: '',
-  userPicturePath: '',
-  picturePath: '',
-  comments: [],
-};
-
 function Posts() {
-  const [textArea, setTextArea] = useState(formFields);
   const [editStatus, setEditStatus] = useState(false);
   const [id, setID] = useState('');
 
-  const { articles,  isLoading, isSuccess, message } =
-    useAppSelector((state) => state.articles);
-
-  const dispatch = useAppDispatch();
-
-  
-
-  const updateHandeler = useCallback(
-    (
-      e: React.SyntheticEvent,
-      article: {
-        firstName: string;
-        lastName: string;
-        title: string;
-        description: string;
-        _id: string;
-        likes: {};
-        location: string;
-        userPicturePath: string;
-        picturePath: string;
-        comments: [];
-      }
-    ) => {
-      setTextArea({
-        firstName: article.firstName,
-        lastName: article.lastName,
-        title: article.title,
-        description: article.description,
-        likes: { ...article.likes },
-        location: '',
-        userPicturePath: '',
-        picturePath: '',
-        comments: [],
-      });
-      setID(article._id);
-      setEditStatus(!editStatus);
-      dispatch(resetArticle());
-    },
-    []
+  const { articles, isLoading, isSuccess, message } = useAppSelector(
+    (state) => state.articles
   );
 
-  const deleteHandeler = useCallback((e: React.SyntheticEvent, id: string) => {
-    dispatch(deleteArticle(id));
-    dispatch(resetArticle());
-  }, []);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isSuccess) {
@@ -80,9 +29,9 @@ function Posts() {
     }
   }, [isSuccess, message]);
 
-useEffect(() => {
-  dispatch(article());
-}, []);
+  useEffect(() => {
+    dispatch(article());
+  }, []);
 
   if (isLoading) {
     return <small>Loading......</small>;
@@ -90,27 +39,12 @@ useEffect(() => {
 
   return (
     <div>
-      <PostForm
-        editStatus={editStatus}
-        setEditStatus={setEditStatus}
-        textArea={textArea}
-        setTextArea={setTextArea}
-        formFields={formFields}
-        id={id}
-      />
-     
+      <PostForm editStatus={editStatus} setEditStatus={setEditStatus} id={id} />
+
       {articles.length > 0 ? (
         articles.map((item: any) => {
           const { _id } = item;
-          return (
-            <PostsList
-              article={item}
-              key={_id}
-              deleteHandeler={deleteHandeler}
-              updateHandeler={updateHandeler}
-            
-            />
-          );
+          return <PostsList article={item} key={_id} />;
         })
       ) : (
         <div>not found</div>
@@ -119,4 +53,4 @@ useEffect(() => {
   );
 }
 
-export default Posts;
+export default Layout(Posts);

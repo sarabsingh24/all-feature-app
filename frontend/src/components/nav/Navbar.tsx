@@ -58,7 +58,7 @@ const trimedPath = userPic?.slice(ind);
             Home
           </Link>
 
-          <Link to="/myposts" className="link-style">
+          <Link to="/myposts" state ={user} className="link-style">
             My Posts
           </Link>
           <Link to="/profile" state={user} className="link-style">

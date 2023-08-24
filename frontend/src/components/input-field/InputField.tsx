@@ -4,12 +4,13 @@ import {InputFientStyle} from './InputField-style'
 
 
 type InputFieldProps = {
-  type:string,
-  value?: number | string,
-  name?:string,
-  placeholder?:string,
-  disabled?:boolean
-  handelchange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  type: string;
+  value?: number | string;
+  name?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  handelchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  inputStyle?:string;
 };
 
 const InputField = ({
@@ -18,6 +19,7 @@ const InputField = ({
   name,
   placeholder,
   handelchange,
+  inputStyle,
   disabled,
 }: InputFieldProps) => {
   return (
@@ -27,7 +29,8 @@ const InputField = ({
       placeholder={placeholder}
       value={value}
       onChange={handelchange}
-      disabled ={disabled ? true : false}
+      disabled={disabled ? true : false}
+      className={inputStyle}
     />
   );
 };

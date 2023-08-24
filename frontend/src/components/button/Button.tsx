@@ -4,12 +4,18 @@ import { ButtonStyle } from './Button-style';
 type InputButtonProps = {
   btnType: any;
   btnName: string;
-  btnFunction?:()=> void;
+  btnFunction?: () => void;
+  disabled?:boolean;
 };
 
-const InputButton = ({ btnType, btnName, btnFunction }: InputButtonProps) => {
+const InputButton = ({
+  btnType,
+  btnName,
+  btnFunction,
+  disabled,
+}: InputButtonProps) => {
   return (
-    <ButtonStyle type={btnType} onClick={btnFunction}>
+    <ButtonStyle type={btnType} onClick={btnFunction} disabled={disabled ? true: false}>
       {btnName}
     </ButtonStyle>
   );

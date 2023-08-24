@@ -8,6 +8,7 @@ import { WrapperStyle } from './Login-style';
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
 import { loginUser, resetUser } from '@reducers/auth/authReducer';
 
+
 type LoginProps = {
   email: string;
   password: string;
@@ -65,7 +66,11 @@ const Login = () => {
             placeholder="Your Password"
             handelchange={inputChangeHandeler}
           />
-          <InputButton btnType="submit" btnName="Submit" />
+          <InputButton
+            btnType="submit"
+            btnName="Submit"
+           
+          />
         </form>
 
         <small>

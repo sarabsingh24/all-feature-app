@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import Posts from '@src/pages/posts/Posts';
+import React from 'react';
+
 
 import {
   WrapperStyle,
@@ -8,7 +8,7 @@ import {
   InfoBoxStyle,
 } from './Layouts-styled';
 
-const Layout = (WrappedComponent: FC<any>) => {
+const Layout = (WrappedComponent: React.FC<any>) => {
   const subLayout = () => {
     return (
       <WrapperStyle>

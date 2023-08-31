@@ -22,6 +22,16 @@ const uploadImage = async (imgData: FormData) => {
 };
 
 
+const uploadImageArray = async (imgData: FormData) => {
+  console.log(FormData);
+  const response = await axios(API_URL + '/multipleImg', {
+    method: 'POST',
+    data: imgData,
+  });
+  return response.data;
+};
+
+
 export const updateUserFun = async (
   data: { id: string; obj: {} },
   token: string
@@ -35,5 +45,5 @@ export const updateUserFun = async (
   return response.data;
 };
 
-const authService = { register, login, uploadImage, updateUserFun };
+const authService = { register, login, uploadImage,uploadImageArray, updateUserFun };
 export default authService;

@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+//reducers
+import { useAppSelector } from '@src/reducers/hooks';
 
 import Login from '@src/pages/login/Login';
 import Register from '@src/pages/register/Register';
 import Profile from '@src/pages/profile/Profile';
 import MyPost from '@src/pages/posts/MyPost';
-
-import Layout from '@pages/layout/Layout';
-import Posts from '@pages/posts/Posts'
+import Posts from '@pages/posts/Posts';
 import Navbar from '@src/components/nav/Navbar';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
-
-
-
-function App() {
-  const [isLogedIn, setIsLogedIn] = useState(false);
+const App: React.FC = () => {
+  const [isLogedIn, setIsLogedIn] = useState<boolean>(false);
   const { user } = useAppSelector((state) => state.auth);
 
-  useEffect(() => {
-    const IsUserExist = Object.values(user).filter((item) => item !== '');
-    if (IsUserExist.length > 0 ) {
+  useLayoutEffect(() => {
+    // const IsUserExist = Object.values(user).filter((item) => item !== '');
+    if (Object.keys(user).length > 0) {
       setIsLogedIn(true);
     } else {
       setIsLogedIn(false);
@@ -34,10 +31,9 @@ function App() {
       <Router>
         <Navbar isLogedIn={isLogedIn} user={user} />
         <Routes>
+          <Route path="/" element={isLogedIn ? <Posts /> : <Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={isLogedIn ? <Posts /> : <Login />} />
-          {/* <Route path="/profile" element={<Profile user={user} />} /> */}
           <Route path="/myposts" element={<MyPost />} />
           <Route
             path="/profile"
@@ -48,6 +44,6 @@ function App() {
       <ToastContainer />
     </React.Fragment>
   );
-}
+};
 
 export default App;

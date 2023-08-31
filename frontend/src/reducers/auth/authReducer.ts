@@ -16,6 +16,7 @@ type IState = {
   user: person;
   userProfile: person;
   singleImage: string;
+  multipleImages: [];
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
@@ -39,6 +40,7 @@ const initialState: IState = {
     ...emptyObj,
   },
   singleImage: '',
+  multipleImages: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -80,10 +82,28 @@ export const loginUser = createAsyncThunk(
 );
 
 export const uploadImage = createAsyncThunk(
-  'auth/userImg',
+  'auth/articleSingleImg',
   async (imgData: FormData, thunkAPI) => {
     try {
       return await authService.uploadImage(imgData);
+    } catch (error: any) {
+      const message =
+        error.response ||
+        error.response.data ||
+        error.response.data.message ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+export const uploadMultipleImages = createAsyncThunk(
+  'auth/articleMultipleImg',
+  async (imgData: FormData, thunkAPI) => {
+    try {
+      return await authService.uploadImageArray(imgData);
     } catch (error: any) {
       const message =
         error.response ||
@@ -123,13 +143,12 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     resetUser: (state) => {
-     
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
       state.message = '';
       state.singleImage = '';
-      
+      state.multipleImages = [];
     },
     logoutUser: (state) => {
       state.user = { ...initialState.userProfile };
@@ -139,6 +158,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.message = '';
       state.singleImage = '';
+      state.multipleImages = [];
     },
   },
   extraReducers: (builder) => {
@@ -175,7 +195,7 @@ const authSlice = createSlice({
         state.message = action.payload;
         state.user = { ...initialState.userProfile };
       })
-
+      //upload Single Image
       .addCase(uploadImage.pending, (state) => {
         state.isLoading = false;
       })
@@ -190,12 +210,26 @@ const authSlice = createSlice({
         state.message = action.payload;
         state.singleImage = '';
       })
+      //upload Multiple Image
+      .addCase(uploadMultipleImages.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(uploadMultipleImages.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.multipleImages = action.payload.imagePath;
+      })
+      .addCase(uploadMultipleImages.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.multipleImages = [];
+      })
       // UPDATE USER INFO
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-       
         state.isLoading = false;
         state.userProfile = action.payload;
         state.isSuccess = true;

@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { JSXElementConstructor } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
 import { resetUser, logoutUser } from '@reducers/auth/authReducer';
-import { resetArticle } from '@reducers/articles/articleReductrs';
 
-import { NavbarStyles, LogoArea ,OtherLinks} from './Navbar-styled';
+import { NavbarStyles, LogoArea, OtherLinks } from './Navbar-styled';
 
 type navbarProps = {
   isLogedIn: boolean;
@@ -13,28 +12,24 @@ type navbarProps = {
     lastName?: string;
     picturePath?: string;
   } | null;
-  
 };
 
-function Navbar({ isLogedIn, user }: navbarProps) {
-const { userProfile } = useAppSelector(state=> state.auth);
+const Navbar: React.FC<navbarProps> = ({ isLogedIn, user }) => {
+  
+  const { userProfile } = useAppSelector((state) => state.auth);
 
-const userPic = userProfile?.picturePath || user?.picturePath; 
-const ind = userPic?.indexOf('assets');
-const trimedPath = userPic?.slice(ind);
+  const userPic = userProfile?.picturePath || user?.picturePath;
+  const ind = userPic?.indexOf('assets');
+  const trimedPath = userPic?.slice(ind);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const logoutHandeler = () => {
     dispatch(resetUser());
-    dispatch(logoutUser()); 
+    dispatch(logoutUser());
     navigate('/login');
-    
-    
-    // dispatch(resetArticle());
   };
-
 
   return (
     <NavbarStyles>
@@ -58,7 +53,7 @@ const trimedPath = userPic?.slice(ind);
             Home
           </Link>
 
-          <Link to="/myposts" state ={user} className="link-style">
+          <Link to="/myposts" state={user} className="link-style">
             My Posts
           </Link>
           <Link to="/profile" state={user} className="link-style">
@@ -71,6 +66,6 @@ const trimedPath = userPic?.slice(ind);
       )}
     </NavbarStyles>
   );
-}
+};
 
 export default Navbar;

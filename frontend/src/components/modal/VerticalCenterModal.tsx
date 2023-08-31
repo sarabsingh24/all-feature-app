@@ -13,7 +13,7 @@ type articleObj = {
   likes: {};
   location: string;
   userPicturePath: string;
-  picturePath: string;
+  picturePath: [];
   comments: [];
   createdAt: string;
 };
@@ -41,6 +41,7 @@ type modalProps = {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     textArea: articleObj
   ) => void;
+  imagesArray:boolean
 };
 
 function VerticallyCenteredModal({
@@ -48,6 +49,7 @@ function VerticallyCenteredModal({
   handleClose,
   setShow,
   article,
+  imagesArray,
 }: modalProps) {
   const [editStatus, setEditStatus] = useState(true);
 
@@ -63,6 +65,7 @@ function VerticallyCenteredModal({
           article={article}
           setShow={setShow}
           id={article._id}
+          imagesArray={imagesArray}
         />
       </Modal.Body>
     </Modal>

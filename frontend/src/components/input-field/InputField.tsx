@@ -10,7 +10,8 @@ type InputFieldProps = {
   placeholder?: string;
   disabled?: boolean;
   handelchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  inputStyle?:string;
+  inputStyle?: string;
+  multiple?:boolean
 };
 
 const InputField = ({
@@ -21,6 +22,7 @@ const InputField = ({
   handelchange,
   inputStyle,
   disabled,
+  multiple,
 }: InputFieldProps) => {
   return (
     <InputFientStyle
@@ -31,6 +33,7 @@ const InputField = ({
       onChange={handelchange}
       disabled={disabled ? true : false}
       className={inputStyle}
+      multiple={multiple ? true : false}
     />
   );
 };

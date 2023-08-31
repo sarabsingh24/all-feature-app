@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import InputField from '@components/input-field/InputField';
-import InputButton from '@src/components/button/Button';
+import { toast } from 'react-toastify';
+
+//reducer
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
 import {
   registerUser,
@@ -9,34 +10,24 @@ import {
   uploadImage,
 } from '@reducers/auth/authReducer';
 
+//Component
+import InputField from '@components/input-field/InputField';
+import InputButton from '@src/components/button/Button';
 import { WrapperStyle } from './Register-style';
-import { fileURLToPath } from 'url';
-import { toast } from 'react-toastify';
+
 
 type formProps = {
   firstName: string;
   lastName: string;
   location: string;
   occupation: string;
-
   picturePath?: string;
   email: string;
   password: string;
 };
 
-const formFields = {
-  firstName: '',
-  lastName: '',
-  location: '',
-  occupation: '',
-  picturePath: '',
-  email: '',
-  password: '',
-};
-
-const Register = () => {
-  const [form, setForm] = useState<formProps>(formFields);
-  const [imgPath, setImgPath] = useState('');
+const Register: React.FC = () => {
+  const [form, setForm] = useState<formProps>({} as formProps);
 
   const { user, isError, isSuccess, isLoading, message, singleImage } =
     useAppSelector((state) => state.auth);
@@ -78,13 +69,11 @@ const Register = () => {
       toast.error(message);
     }
 
-    if (!allFielsFilled && isSuccess) {
+    if (allFielsFilled && isSuccess) {
       navigate('/login');
       dispatch(resetUser());
     }
-
-    //  dispatch(resetUser());
-  }, [user, isError, isSuccess, isLoading, message]);
+  }, [user, isError, message]);
 
   return (
     <WrapperStyle>
@@ -120,6 +109,7 @@ const Register = () => {
             handelchange={inputChangeHandeler}
           />
           <InputField
+            disabled={true}
             type="text"
             name="picturePath"
             value={form.picturePath || ''}

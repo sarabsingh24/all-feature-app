@@ -12,7 +12,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import InputField from '@components/input-field/InputField';
 import TextArea from '@components/text-area/TextArea';
 import InputButton from '@components/button/Button';
-import { uploadImage, resetUser } from '@reducers/auth/authReducer';
+import {
+  uploadImage,
+  resetUser,
+  uploadMultipleImages,
+} from '@reducers/auth/authReducer';
 
 import { FormStyled, Flex2Column } from './Post-styled';
 
@@ -24,7 +28,7 @@ type IState = {
   lastName: string;
   location: string;
   userPicturePath: string;
-  picturePath: string;
+  picturePath: [];
   comments: never[];
 };
 
@@ -34,26 +38,20 @@ type postFormProps = {
   article?: IState;
   setShow?: React.Dispatch<React.SetStateAction<boolean>>;
   id: string;
+  imagesArray?: boolean;
 };
 
-const formFields = {
-  title: '',
-  description: '',
-  likes: {},
-  firstName: '',
-  lastName: '',
-  location: '',
-  userPicturePath: '',
-  picturePath: '',
-  comments: [],
-};
+const PostForm: React.FC<postFormProps> = ({
+  editStatus,
+  article,
+  setShow,
+  id,
+  imagesArray,
+}) => {
+  const [textArea, setTextArea] = useState<IState>({} as IState);
+  const [IsBtnEnable, setIsBtnEnable] = useState<boolean>(true);
 
-function PostForm({ editStatus, article, setShow, id }: postFormProps) {
-  const [textArea, setTextArea] = useState({} as IState);
-
-  const [IsBtnEnable, setIsBtnEnable] = useState(true);
-  const { singleImage } = useAppSelector((state) => state.auth);
-
+  const { singleImage, multipleImages } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const changeHandeler = (
@@ -66,6 +64,16 @@ function PostForm({ editStatus, article, setShow, id }: postFormProps) {
 
     setTextArea({ ...textArea, [name]: value });
     setIsBtnEnable(false);
+  };
+
+  const resetFormHandeler = () => {
+    let emptyFormField: any = { ...textArea };
+
+    for (let key in textArea) {
+      emptyFormField[key] = '';
+    }
+
+    setTextArea({ ...emptyFormField });
   };
 
   const submitPostHandeler = (e: React.SyntheticEvent) => {
@@ -85,7 +93,8 @@ function PostForm({ editStatus, article, setShow, id }: postFormProps) {
       dispatch(updateArticle(data));
     } else {
       dispatch(articlePost(textArea));
-      setTextArea({ ...formFields });
+      resetFormHandeler();
+
       dispatch(resetUser());
     }
     if (setShow) {
@@ -97,22 +106,39 @@ function PostForm({ editStatus, article, setShow, id }: postFormProps) {
 
   const updateImgHandeler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
-    formData.append('picUrl', e.target.files![0]);
 
-    dispatch(uploadImage(formData));
+    if (imagesArray) {
+      const fileList: any = e.target.files;
+      const files: File[] = [...fileList];
+      files.map((file,ind) => {
+        return formData.append('picUrl', e.target.files![ind]);
+      });
+  
+      dispatch(uploadMultipleImages(formData));
+      
+    } else {
+     
+      formData.append('picUrl', e.target.files![0]);
+     
+      dispatch(uploadImage(formData));
+    }
+
     setIsBtnEnable(false);
+
     e.target.value = '';
   };
 
   useEffect(() => {
     if (singleImage !== '') {
-      setTextArea({ ...textArea, picturePath: singleImage });
+      setTextArea({ ...textArea, userPicturePath: singleImage });
     }
   }, [singleImage]);
 
-  const resetFormHandeler = () => {
-    setTextArea({ ...formFields });
-  };
+  useEffect(() => {
+    if (multipleImages.length > 0) {
+      setTextArea({ ...textArea, picturePath: multipleImages });
+    }
+  }, [multipleImages]);
 
   useEffect(() => {
     if (article) {
@@ -120,11 +146,31 @@ function PostForm({ editStatus, article, setShow, id }: postFormProps) {
     }
   }, []);
 
+  
+
   return (
     <div>
       <FormStyled onSubmit={submitPostHandeler}>
         <InputGroup className="mb-3">
           <InputField
+            type="file"
+            name="fileName"
+            placeholder="Your img"
+            handelchange={updateImgHandeler}
+            inputStyle="upload-img-btn"
+            multiple={true}
+          />
+          <InputGroup.Text id="inputGroup-sizing-default">
+            Browse
+          </InputGroup.Text>
+          <Form.Control
+            disabled
+            aria-label="Default"
+            aria-describedby="inputGroup-sizing-default"
+            value={textArea?.picturePath || ''}
+          />
+        </InputGroup>
+        {/* <InputField
             type="file"
             name="fileName"
             placeholder="Your img"
@@ -140,7 +186,7 @@ function PostForm({ editStatus, article, setShow, id }: postFormProps) {
             aria-describedby="inputGroup-sizing-default"
             value={textArea?.picturePath || ''}
           />
-        </InputGroup>
+        </InputGroup> */}
 
         <InputField
           type="tex"
@@ -176,6 +222,6 @@ function PostForm({ editStatus, article, setShow, id }: postFormProps) {
       </FormStyled>
     </div>
   );
-}
+};
 
 export default PostForm;

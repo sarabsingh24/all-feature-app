@@ -1,31 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import InputField from '@components/input-field/InputField';
-import InputButton from '@src/components/button/Button';
+
+//reducer
 import { useAppDispatch, useAppSelector } from '@src/reducers/hooks';
 import { getUserInfo } from '@reducers/users/usersReducer';
+import { updateUser, uploadImage } from '@reducers/auth/authReducer';
+
+//bootstrap
+import Layout from '@pages/layout/Layout';
+import InputField from '@components/input-field/InputField';
+import InputButton from '@src/components/button/Button';
 import { WrapperStyle } from './Profile-style';
 
-import { updateUser, uploadImage } from '@reducers/auth/authReducer';
-import Layout from '@pages/layout/Layout';
 
-const formData = {
-  _id: '',
-  firstName: '',
-  lastName: '',
-  email: '',
-  location: '',
-  occupation: '',
-  userPicturePath: '',
-  picturePath: '',
+
+type articleObj = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  occupation:string;
+  title: string;
+  description: string;
+  likes: {};
+  location: string;
+  userPicturePath: string;
+  picturePath: string;
+  comments: [];
+  createdAt: string;
 };
 
-const Profile = () => {
-  const [form, setForm] = useState(
-    formData,
-   
-  );
-  const [upddateField, setUpddateField] = useState({});
+
+
+const Profile:React.FC = () => {
+  const [form, setForm] = useState<articleObj>({} as articleObj);
+  const [upddateField, setUpddateField] = useState<{} >({});
   const [IsDiseabled] = useState(true);
 
   const { userProfile, singleImage } = useAppSelector((state) => state.auth);
@@ -77,6 +85,8 @@ const Profile = () => {
     delete newObj.token;
     setForm(newObj);
   }, [locationState.state]);
+
+  
 
   return (
     <WrapperStyle>

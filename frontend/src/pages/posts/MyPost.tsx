@@ -1,34 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
 import { useLocation } from 'react-router-dom';
 
+//reducer
+import { useAppSelector, useAppDispatch } from '@src/reducers/hooks';
 import {
   article,
   deleteArticle,
   resetArticle,
 } from '@src/reducers/articles/articleReductrs';
 import { toast } from 'react-toastify';
-import Layout from '@pages/layout/Layout';
 
+//component
+import Layout from '@pages/layout/Layout';
 import PostsList from './PostsList';
 
-const formFields = {
-  title: '',
-  description: '',
-  likes: {},
-  firstName: '',
-  lastName: '',
-  location: '',
-  userPicturePath: '',
-  picturePath: '',
-  comments: [],
-};
-
-function Posts() {
-  const [textArea, setTextArea] = useState(formFields);
-  const [editStatus, setEditStatus] = useState(false);
-  const [id, setID] = useState('');
-
+const MyPosts: React.FC = () => {
+  const { user:loginUser } = useAppSelector((state) => state.auth);
   const { articles, isLoading, isSuccess, message } = useAppSelector(
     (state) => state.articles
   );
@@ -58,13 +45,20 @@ function Posts() {
       {myPost.length > 0 ? (
         myPost.map((item: any) => {
           const { _id } = item;
-          return <PostsList article={item} key={_id} />;
+          return (
+            <PostsList
+              article={item}
+              key={_id}
+              userId={loginUser._id}
+              editPost={true}
+            />
+          );
         })
       ) : (
         <div>not found</div>
       )}
     </div>
   );
-}
+};
 
-export default Layout(Posts);
+export default Layout(MyPosts);

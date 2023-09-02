@@ -2,6 +2,11 @@ import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+type commentText = {
+  commentedBy: string;
+  text: string;
+  createdAt: number;
+};
 
 type articleObj = {
   _id: string;
@@ -13,7 +18,7 @@ type articleObj = {
   location: string;
   userPicturePath: string;
   picturePath: [];
-  comments: [];
+  comments: commentText[];
   createdAt: string;
 };
 

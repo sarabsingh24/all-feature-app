@@ -10,6 +10,8 @@ type person = {
   occupation: string;
   userPicturePath: string;
   picturePath: string;
+   viewedProfile:number;
+    impressions: number;
 };
 
 type IState = {
@@ -33,6 +35,8 @@ const initialState: IState = {
     occupation: '',
     userPicturePath: '',
     picturePath: '',
+   viewedProfile:0,
+    impressions: 0,
   },
   users: [],
   isLoading: false,

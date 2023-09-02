@@ -4,6 +4,12 @@ import Modal from 'react-bootstrap/Modal';
 import PostForm from '@pages/posts/PostForm';
 import Form from 'react-bootstrap/Form';
 
+type commentText = {
+  commentedBy: string;
+  text: string;
+  createdAt: number;
+};
+
 type articleObj = {
   _id: string;
   firstName: string;
@@ -14,7 +20,7 @@ type articleObj = {
   location: string;
   userPicturePath: string;
   picturePath: [];
-  comments: [];
+  comments: commentText[];
   createdAt: string;
 };
 

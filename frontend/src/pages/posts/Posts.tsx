@@ -22,7 +22,7 @@ const Posts: React.FC = () => {
   const { articles, isLoading, isSuccess, message } = useAppSelector(
     (state) => state.articles
   );
-const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -39,8 +39,6 @@ const { user } = useAppSelector((state) => state.auth);
   if (isLoading) {
     return <small>Loading......</small>;
   }
-
-  console.log(user);
 
   return (
     <div>

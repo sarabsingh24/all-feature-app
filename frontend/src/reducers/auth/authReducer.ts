@@ -10,6 +10,9 @@ type person = {
   occupation: string;
   userPicturePath: string;
   picturePath: string;
+  viewedProfile: number;
+  impressions: number;
+  // notification: [];
 };
 
 type IState = {
@@ -21,6 +24,7 @@ type IState = {
   isSuccess: boolean;
   isLoading: boolean;
   message: any;
+ 
 };
 
 const emptyObj = {
@@ -32,6 +36,10 @@ const emptyObj = {
   occupation: '',
   userPicturePath: '',
   picturePath: '',
+  viewedProfile: 0,
+  impressions: 0,
+  // notification:[],
+ 
 };
 
 const initialState: IState = {
@@ -148,7 +156,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.message = '';
       state.singleImage = '';
-      state.multipleImages = [];
+      // state.multipleImages = [];
     },
     logoutUser: (state) => {
       state.user = { ...initialState.userProfile };
@@ -158,7 +166,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.message = '';
       state.singleImage = '';
-      state.multipleImages = [];
+      // state.multipleImages = [];
     },
   },
   extraReducers: (builder) => {

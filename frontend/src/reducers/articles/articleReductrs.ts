@@ -4,6 +4,7 @@ import articleService from './articleService';
 
 type IState = {
   articles: [];
+  comments:[];
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
@@ -12,6 +13,7 @@ type IState = {
 
 const initialState: IState = {
   articles: [],
+  comments:[],
   isLoading: false,
   isSuccess: false,
   isError: false,
@@ -63,6 +65,29 @@ export const updateArticle = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await articleService.updateArticles(data, token);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+export const updateComment = createAsyncThunk(
+  'articles/comment',
+  async (
+    data: { id: string; userId: string; text: string },
+    thunkAPI: any
+  ) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await articleService.updateComment(data, token);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -174,6 +199,26 @@ const usersSlice = createSlice({
       })
       .addCase(updateArticle.rejected, (state, action) => {
         state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+
+      // update Comment
+
+      .addCase(updateComment.pending, (state) => {
+        // state.isLoading = true;
+      })
+      .addCase(updateComment.fulfilled, (state, action) => {
+       
+        // state.isLoading = false;
+        state.articles = action.payload;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = 'One comment added';
+      })
+      .addCase(updateComment.rejected, (state, action) => {
+        // state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;

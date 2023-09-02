@@ -19,7 +19,7 @@ const App: React.FC = () => {
 
   useLayoutEffect(() => {
     // const IsUserExist = Object.values(user).filter((item) => item !== '');
-    if (Object.keys(user).length > 0) {
+    if ( user.email !== '') {
       setIsLogedIn(true);
     } else {
       setIsLogedIn(false);

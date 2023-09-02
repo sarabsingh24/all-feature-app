@@ -20,6 +20,11 @@ import {
 
 import { FormStyled, Flex2Column } from './Post-styled';
 
+type commentText = {
+  commentedBy: string;
+  text: string;
+  createdAt: number;
+};
 type IState = {
   title: string;
   description: string;
@@ -29,7 +34,7 @@ type IState = {
   location: string;
   userPicturePath: string;
   picturePath: [];
-  comments: never[];
+  comments: commentText[];
 };
 
 type postFormProps = {

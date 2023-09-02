@@ -39,8 +39,9 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    const IsUserExist = Object.values(user).filter((item) => item !== '');
-    if (IsUserExist.length > 0) {
+    const IsUserExist = user.email !== '';
+    
+    if (IsUserExist) {
       navigate('/');
     }
   }, [user]);
